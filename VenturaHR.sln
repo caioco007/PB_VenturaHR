@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenturaHR", "VenturaHR\VenturaHR.csproj", "{B8548600-C20D-4D8A-9F69-46EB5E86DDB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenturaHR", "VenturaHR\VenturaHR.csproj", "{B8548600-C20D-4D8A-9F69-46EB5E86DDB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetIdentityDbContext", "AspNetIdentityDbContext\AspNetIdentityDbContext.csproj", "{277DF835-8149-4005-A103-E459C7788E90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationDbContext", "ApplicationDbContext\ApplicationDbContext.csproj", "{310A1AC5-AFF8-4A09-91AF-DB2FFB328192}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{B8548600-C20D-4D8A-9F69-46EB5E86DDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8548600-C20D-4D8A-9F69-46EB5E86DDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8548600-C20D-4D8A-9F69-46EB5E86DDB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{277DF835-8149-4005-A103-E459C7788E90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{277DF835-8149-4005-A103-E459C7788E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{277DF835-8149-4005-A103-E459C7788E90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{277DF835-8149-4005-A103-E459C7788E90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310A1AC5-AFF8-4A09-91AF-DB2FFB328192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310A1AC5-AFF8-4A09-91AF-DB2FFB328192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310A1AC5-AFF8-4A09-91AF-DB2FFB328192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310A1AC5-AFF8-4A09-91AF-DB2FFB328192}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

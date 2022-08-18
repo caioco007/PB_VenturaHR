@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace VenturaHR
 {
@@ -23,6 +23,33 @@ namespace VenturaHR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region [CultureInfo]
+            var cultureInfo = new CultureInfo("pt-BR");
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            #endregion
+
+            #region [ApplicationDbContext]
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<ApplicationDbContext.Context.ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            #endregion
+
+            #region [AspNetIdentity]
+            services.AddDbContext<AspNetIdentityDbContext.ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddIdentity<AspNetIdentityDbContext.User, AspNetIdentityDbContext.Role>()
+                    .AddEntityFrameworkStores<AspNetIdentityDbContext.ApplicationDbContext>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+
+            });
+            
+            #endregion
+
             services.AddControllersWithViews();
         }
 
@@ -44,6 +71,7 @@ namespace VenturaHR
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
