@@ -5,10 +5,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\assets\vendor\simple-datatables\**" />
+    <Content Remove="wwwroot\assets\vendor\simple-datatables\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\simple-datatables\**" />
+    <None Remove="wwwroot\assets\vendor\simple-datatables\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Account\PasswordRecoveryEmail.cshtml" />
+    <Content Remove="Views\Shared\_Layout_Login.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\jquery\jquery-3.5.1.min.js" />
+    <None Include="wwwroot\lib\jqueryMask\jquery.mask.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ApplicationDbContext\ApplicationDbContext.csproj" />
     <ProjectReference Include="..\AspNetIdentityDbContext\AspNetIdentityDbContext.csproj" />
+    <ProjectReference Include="..\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.9" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.11" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">

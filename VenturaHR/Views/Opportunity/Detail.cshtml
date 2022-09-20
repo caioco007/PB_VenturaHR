@@ -1,0 +1,86 @@
+﻿@model DTO.Opportunity.OpportunityViewModel
+
+@inject Services.Person.PersonTypeService personTypeService
+@inject Services.Person.PersonService personService
+@inject VenturaHR.Helpers.DropDownListHelper dropDownListHelper
+
+@{
+}
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Vaga #@Model.OpportunityId</h5>
+
+        <!-- Multi Columns Form -->
+        <form action="@Url.Action("InterestedOpportunity", "Opportunity")" method="post">
+            <input type="hidden" name="OpportunityId" value="@Model.OpportunityId" />
+            <div class="row">
+                <div class="col-md-9">
+                    <label for="inputOffice" class="form-label">Vaga</label>
+                    <input type="text" class="form-control" name="Office" id="inputOffice" value="@Model.Office" disabled />
+                </div>
+                <div class="col-md-3">
+                    <label for="inputEmployment" class="form-label">Tipo</label>
+                    <input class="form-control" name="EmploymentType" value="@Model.EmploymentType" disabled />
+                </div>
+                <div class="col-md-3">
+                    <label for="inputSalary" class="form-label">Salário</label>
+                    <input type="text" class="form-control money" name="Salary" id="inputSalary" value="@Model._Salary" disabled />
+                </div>
+                <div class="col-md-12">
+                    <label for="inputDescription" class="form-label">Descrição</label>
+                    <input class="form-control" name="Description" id="inputDescription" value="@Model.Description" disabled />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">CEP</label>
+                        <input class="form-control cep" name="ZipCodeNumbersOnly" value="@Model.ZipCodeNumbersOnly" disabled />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label">Endereço</label>
+                        <input class="form-control" placeholder="Endereço" name="Address" value="@Model.Address" disabled />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Número</label>
+                        <input class="form-control" placeholder="Número" name="Number" value="@Model.Number" disabled />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Complemento</label>
+                        <input class="form-control" placeholder="Complemento" name="Complement" value="@Model.Complement" disabled />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Bairro</label>
+                        <input class="form-control" placeholder="Bairro" name="Neighborhood" value="@Model.Neighborhood" disabled />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Cidade</label>
+                        <input class="form-control" placeholder="Cidade" name="City" value="@Model.City" disabled />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Estado</label>
+                        <input class="form-control" name="State" value="@Model.State" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Tenho Interesse</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form><!-- End Multi Columns Form -->
+
+    </div>
+</div>

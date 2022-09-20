@@ -1,0 +1,47 @@
+﻿@inject Services.Person.PersonTypeService personTypeService
+
+
+<table id="opportunity-index-table" class="table table-borderless datatable">
+    <thead>
+        <tr>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">Vaga</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Descrição</th>
+            <th scope="col">Cidade - UF</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script asp-cut-key="opportunity-index">
+    var opportunityDataTables;
+    console.log('teste');
+    $(document).ready(function () {
+        companyDataTables = $('#opportunity-index-table').DataTable({
+            serverSide: false,
+            proccessing: true,
+            searching: true,
+            lengthChange: false,
+            pageLength: 30,
+            dom: 'tip',
+            ajax: {
+                url: '@Url.Action("List", "Opportunity")'
+                , data: function (d) {}
+                , type: 'POST'
+            },
+            columns: [
+                { render: function (data, type, row) { return row.opportunityId; }, visible: false  },
+                { render: function (data, type, row) { return row.office; } },
+                { render: function (data, type, row) { return row.companyName; } },
+                { render: function (data, type, row) { return row.description; } },
+                { render: function (data, type, row) { return row.local; } },
+                { render: function (data, type, row) { return "teste"; } },
+            ],
+            drawCallback: initializeCopyToClipboard
+
+		});
+    });
+</script>

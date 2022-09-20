@@ -47,14 +47,33 @@ namespace VenturaHR
                 options.Password.RequireUppercase = false;
 
             });
-            
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Home";
+                options.SlidingExpiration = true;
+            });
             #endregion
 
-            services.AddControllersWithViews();
+            #region [Services]
+            services.AddScoped<Helpers.DropDownListHelper>();
+            services.AddScoped<Helpers.ViewEngineHelper>();
+
+            services.AddScoped<Services.User.UserService>();
+
+            services.AddScoped<Services.Person.PersonService>();
+            services.AddScoped<Services.Person.PersonTypeService>();
+
+            services.AddScoped<Services.Opportunity.OpportunityService>();
+            services.AddScoped<Services.Opportunity.OpportunityListService>();
+            #endregion
+
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<AspNetIdentityDbContext.Role> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -74,12 +93,24 @@ namespace VenturaHR
             app.UseAuthentication();
             app.UseAuthorization();
 
+            CreateAspNetIdentityRoles(roleManager);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void CreateAspNetIdentityRoles(RoleManager<AspNetIdentityDbContext.Role> roleManager)
+        {
+            try
+            {
+                foreach (var role in new string[] { "Administrator", "Company", "Candidate"})
+                    if (!roleManager.RoleExistsAsync(role).Result) { var identityResult = roleManager.CreateAsync(new AspNetIdentityDbContext.Role() { Name = role, Description = role }).Result; }
+            }
+            catch (Exception exception) { }
         }
     }
 }

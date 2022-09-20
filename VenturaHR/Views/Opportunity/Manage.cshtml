@@ -1,0 +1,47 @@
+﻿@model DTO.Opportunity.OpportunityViewModel
+
+@inject Services.Person.PersonTypeService personTypeService
+@inject Services.Person.PersonService personService
+@inject VenturaHR.Helpers.DropDownListHelper dropDownListHelper
+
+@{
+}
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Cadastro de Vagas</h5>
+
+        <!-- Multi Columns Form -->
+        <form action="@Url.Action("CompanyManage", "Opportunity")" method="post">
+            <div class="row">
+                <div class="col-md-9">
+                    <label for="inputOffice" class="form-label">Vaga</label>
+                    <input type="text" class="form-control" name="Office" id="inputOffice">
+                </div>
+                <div class="col-md-3">
+                    <label for="inputEmployment" class="form-label">Tipo</label>
+                    <select class="form-control" name="EmploymentType" id="inputEmployment">
+                        <option value="@DTO.Opportunity.EmploymentTypes.Clt" selected>CLT</option>
+                        <option value="@DTO.Opportunity.EmploymentTypes.Pj">PJ</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="inputSalary" class="form-label">Salário</label>
+                    <input type="text" class="form-control money" name="Salary" id="inputSalary" />
+                </div>
+                <div class="col-md-12">
+                    <label for="inputDescription" class="form-label">Descrição</label>
+                    <textarea class="form-control" name="Description" id="inputDescription"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                @(await Component.InvokeAsync<VenturaHR.ViewComponents.Shared.AddressViewComponent>(Model.CopyToEntity<DTO.Shared.AddressViewModel>()))
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form><!-- End Multi Columns Form -->
+
+    </div>
+</div>

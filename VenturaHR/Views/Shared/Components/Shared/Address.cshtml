@@ -1,0 +1,47 @@
+﻿@model DTO.Shared.AddressViewModel
+
+@inject VenturaHR.Helpers.DropDownListHelper dropDownListHelper
+
+
+<div class="col-md-2">
+    <div class="form-group">
+        <label class="control-label">CEP</label>
+        <input class="form-control cep" name="ZipCodeNumbersOnly" onblur="getAddress('@Model.FormId [name=\'ZipCodeNumbersOnly\']', '@Model.FormId [name=\'Address\']', '@Model.FormId [name=\'Neighborhood\']', '@Model.FormId [name=\'City\']', '@Model.FormId [name=\'State\']')"/>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label class="control-label">Endereço</label>
+        <input class="form-control" placeholder="Endereço" name="Address" />
+    </div>
+</div>
+<div class="col-md-2">
+    <div class="form-group">
+        <label class="control-label">Número</label>
+        <input class="form-control" placeholder="Número" name="Number" />
+    </div>
+</div>
+<div class="col-md-2">
+    <div class="form-group">
+        <label class="control-label">Complemento</label>
+        <input class="form-control" placeholder="Complemento" name="Complement" />
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="form-group">
+        <label class="control-label">Bairro</label>
+        <input class="form-control" placeholder="Bairro" name="Neighborhood" />
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="form-group">
+        <label class="control-label">Cidade</label>
+        <input class="form-control" placeholder="Cidade" name="City" />
+    </div>
+</div>
+<div class="col-md-2">
+    <div class="form-group">
+        <label class="control-label">Estado</label>
+        @Html.DropDownList("State", dropDownListHelper.GetStates(Model.State), "Selecione", new { Class = "form-control w-100" })
+    </div>
+</div>
