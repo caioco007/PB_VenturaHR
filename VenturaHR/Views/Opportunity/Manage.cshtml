@@ -46,9 +46,13 @@
                 @(await Component.InvokeAsync<VenturaHR.ViewComponents.Shared.AddressViewComponent>(Model.CopyToEntity<DTO.Shared.AddressViewModel>()))
             </div>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+            <div class="row">
+                <div class="col mt-4">
+                    <a class="btn btn-danger text-white float-left" href="@Url.Action("Index","Opportunity")">Voltar</a>
+                </div>
+                <div class="col mt-4 text-end">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
         </form><!-- End Multi Columns Form -->
 

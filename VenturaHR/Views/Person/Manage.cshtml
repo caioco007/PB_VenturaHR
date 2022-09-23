@@ -4,7 +4,7 @@
 
 <div class="card mt-3">
     <div class="card-body">
-        <h5 class="card-title">Cadastro de Vagas</h5>
+        <h5 class="card-title">Cadastro Usuário</h5>
 
         <!-- Multi Columns Form -->
         <form action="@Url.Action("Manage", "Person")" method="post">
@@ -50,9 +50,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="reset" class="btn btn-secondary">Reset</button>
+                <div class="col mt-4">
+                    <a class="btn btn-danger text-white float-left" href="@Url.Action("Index","Home")">Voltar</a>
+                </div>
+                <div class="col mt-4 text-end">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </div>
         </form><!-- End Multi Columns Form -->

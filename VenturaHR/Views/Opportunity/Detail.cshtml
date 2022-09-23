@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-md-12">
                     <label for="inputDescription" class="form-label">Descrição</label>
-                    <input class="form-control" name="Description" id="inputDescription" value="@Model.Description" disabled />
+                    <textarea class="form-control" name="Description" id="inputDescription" disabled>@Model.Description</textarea>
                 </div>
             </div>
             <div class="row">
@@ -83,10 +83,14 @@
                     </div>
                 </div>
             </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary @((user == null || personTypeId == (int)DTO.Person.PersonType.Company || isCandidateForOpportunity) ? "d-none" : "")">Tenho Interesse</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+            
+            <div class="row">
+                <div class="col mt-4">
+                    <a class="btn btn-danger text-white float-left" href="@Url.Action("Index","Home")">Voltar</a>
+                </div>
+                <div class="col mt-4 text-end">
+                    <button type="submit" class="btn btn-primary @((user == null || personTypeId == (int)DTO.Person.PersonType.Company || isCandidateForOpportunity) ? "d-none" : "")">Tenho Interesse</button>
+                </div>
             </div>
         </form><!-- End Multi Columns Form -->
 

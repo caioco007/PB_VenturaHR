@@ -68,6 +68,11 @@ namespace DTO.Utils
             return entity2;
         }
 
+        public static bool In<T>(this T source, params T[] list)
+        {
+            return list.Contains(source);
+        }
+
         public static DateTime? GetDateTimeFromDbDataReader(this object reader) => reader == DBNull.Value ? null : (DateTime?)reader;
         public static TimeSpan? GetTimeSpanFromDbDataReader(this object reader) => reader == DBNull.Value ? null : (TimeSpan?)reader;
         public static int? GetIntFromDbDataReader(this object reader) => reader == DBNull.Value ? null : (int?)reader;

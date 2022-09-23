@@ -1,7 +1,9 @@
 ﻿using DTO.Claim;
 using DTO.Dashboard;
+using DTO.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Services.CandidateForOpportunity;
 using Services.Opportunity;
 using Services.Person;
 using System;
@@ -15,13 +17,15 @@ namespace VenturaHR.ViewComponents.Dashboard
         readonly PersonService personService;
         readonly PersonTypeService personTypeService;
         readonly OpportunityService opportunityService;
+        readonly CandidateForOpportunityService candidateForOpportunityService;
         readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public IndexViewComponent(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, UserManager<AspNetIdentityDbContext.User> userManager)
+        public IndexViewComponent(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, CandidateForOpportunityService candidateForOpportunityService, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;
             this.opportunityService = opportunityService;
+            this.candidateForOpportunityService = candidateForOpportunityService;
             this.userManager = userManager;
         }
 
@@ -35,31 +39,38 @@ namespace VenturaHR.ViewComponents.Dashboard
             if (HttpContext.User.IsAdministrator())
             {
                 dashboardViewModel.TotalOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted);
+                dashboardViewModel.TotalOpportunitysToday = await opportunityService.CountAsync(x => !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date);
                 dashboardViewModel.TotalActiveOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.ExpirationDate > DateTime.Today);
 
                 dashboardViewModel.TotalCompanys = await personService.CountAsync(x => x.PersonTypeId == personCompanyTypeId && !x.IsDeleted);
+                dashboardViewModel.TotalCompanysToday = await personService.CountAsync(x => x.PersonTypeId == personCompanyTypeId && !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date );
                 dashboardViewModel.TotalActiveCompanys = await personService.CountAsync(x => x.PersonTypeId == personCompanyTypeId && !x.IsDeleted && x.IsActive);
 
                 dashboardViewModel.TotalCandidates = await personService.CountAsync(x => x.PersonTypeId == personCandidateTypeId && !x.IsDeleted);
+                dashboardViewModel.TotalCandidatesToday = await personService.CountAsync(x => x.PersonTypeId == personCandidateTypeId && !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date);
                 dashboardViewModel.TotalActiveCandidates = await personService.CountAsync(x => x.PersonTypeId == personCandidateTypeId && !x.IsDeleted && x.IsActive);
+
+                dashboardViewModel.TotalCandidateForOpportunitys = await candidateForOpportunityService.CountAsync(x => !x.IsDeleted);
+                dashboardViewModel.TotalCandidateForOpportunitysToday = await candidateForOpportunityService.CountAsync(x => !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date);
             }
-            else if (HttpContext.User.IsCompany())
-            {
-                var user = await userManager.GetUserAsync(HttpContext.User);
+            //else if (HttpContext.User.IsCompany())
+            //{
+            //    var user = await userManager.GetUserAsync(HttpContext.User);
 
-                dashboardViewModel.TotalOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.CompanyId == user.PersonId);
-                dashboardViewModel.TotalActiveOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.ExpirationDate > DateTime.Today && x.CompanyId == user.PersonId);
-            }
+            //    dashboardViewModel.TotalOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.CompanyId == user.PersonId);
+            //    dashboardViewModel.TotalActiveOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.ExpirationDate > DateTime.Today && x.CompanyId == user.PersonId);
+            //}
 
-            else if (HttpContext.User.IsCandidate())
-            {
-                var user = await userManager.GetUserAsync(HttpContext.User);
+            //else if (HttpContext.User.IsCandidate())
+            //{
+            //    var user = await userManager.GetUserAsync(HttpContext.User);
+            //    var opportunityIds = await candidateForOpportunityService.GetOpportunityIdByCandidateId(user.PersonId.Value);
 
-                dashboardViewModel.TotalOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.CandidateId == user.PersonId);
-                dashboardViewModel.TotalActiveOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.ExpirationDate > DateTime.Today && x.CandidateId == user.PersonId);
-            }
+            //    dashboardViewModel.TotalOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && opportunityIds.Contains(x.OpportunityId));
+            //    dashboardViewModel.TotalActiveOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.ExpirationDate > DateTime.Today && opportunityIds.Contains(x.OpportunityId));
+            //}
 
-            return await Task.Run(() => View("Index", dashboardViewModel));
+            return await Task.Run(() => View("Dashboard", dashboardViewModel));
         }
     }
 }

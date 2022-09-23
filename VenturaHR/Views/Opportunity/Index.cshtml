@@ -14,28 +14,46 @@
     }
 }
 
-<table id="opportunity-index-table" class="table table-borderless datatable">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Vaga</th>
-            <th scope="col">Empresa</th>
-            <th scope="col">Descrição</th>
-            <th scope="col" class="text-nowrap">Cidade - UF</th>
-            @if (personTypeId != null)
-            {
-                <th scope="col">Status</th>
-            }
-            @if (personTypeId == (int)DTO.Person.PersonType.Company)
-            {
-                <th scope="col" class="text-center">Candidatos</th>
-                <th scope="col">Ações</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Vagas</h5>
+        @if (personTypeId == (int)DTO.Person.PersonType.Company) 
+        { 
+            <div class="row">
+                <div class="col-12 mb-4 text-end">
+                    <a class="btn btn-primary" href="@Url.Action("CompanyManage","Opportunity")"><i class="bi bi-plus-lg"></i>Novo</a>
+                </div>
+
+            </div>
+        }
+        <div class="row">
+            <table id="opportunity-index-table" class="table table-borderless datatable">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Vaga</th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col" class="text-nowrap">Cidade - UF</th>
+                        @if (personTypeId != null)
+                        {
+                            <th scope="col">Status</th>
+                        }
+                        @if (personTypeId == (int)DTO.Person.PersonType.Company)
+                        {
+                            <th scope="col" class="text-center">Candidatos</th>
+                            <th scope="col">Ações</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 
 
 <div class="modal fade" id="candidates-opportunity-modal" tabindex="-1" role="dialog" aria-hidden="true">

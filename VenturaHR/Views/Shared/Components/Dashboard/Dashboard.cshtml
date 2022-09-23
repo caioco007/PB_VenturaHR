@@ -1,0 +1,106 @@
+﻿@model DTO.Dashboard.DashboardViewModel
+@*<script src="@Url.Content("~/lib/jquery/dist/jquery.min.js")"></script>
+    <script src="@Url.Content("~/theme/assets/plugins/jquery-knob/jquery.knob.js")"></script>*@
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Usuários criados hoje</h5>
+
+                <!-- Pie Chart -->
+                <canvas id="pieChart" style="max-height: 400px;"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        new Chart(document.querySelector('#pieChart'), {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Empresa',
+                                    'Candidato'
+                                ],
+                                datasets: [{
+                                    label: 'My First Dataset',
+                                    data: [@Model.TotalCompanys, @Model.TotalCandidates],
+                                    backgroundColor: [
+                                        'rgb(54, 162, 235)',
+                                        'rgb(255, 205, 86)'
+                                    ],
+                                    hoverOffset: 4
+                                }]
+                            }
+                        });
+                    });
+                </script>
+                <!-- End Pie CHart -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Vagas criadas hoje</h5>
+
+                <!-- Pie Chart -->
+                <canvas id="pieChart1" style="max-height: 400px;"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        new Chart(document.querySelector('#pieChart1'), {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Vaga'
+                                ],
+                                datasets: [{
+                                    label: 'My First Dataset',
+                                    data: [@Model.TotalOpportunitys],
+                                    backgroundColor: [
+                                        'rgb(235, 79, 77)'
+                                    ],
+                                    hoverOffset: 4
+                                }]
+                            }
+                        });
+                    });
+                </script>
+                <!-- End Pie CHart -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Vagas respondidas hoje</h5>
+
+                <!-- Pie Chart -->
+                <canvas id="pieChart2" style="max-height: 400px;"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        new Chart(document.querySelector('#pieChart2'), {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    'Respondida'
+                                ],
+                                datasets: [{
+                                    label: 'My First Dataset',
+                                    data: [@Model.TotalCandidateForOpportunitys],
+                                    backgroundColor: [
+                                        'rgb(155, 238, 114)'
+                                    ],
+                                    hoverOffset: 4
+                                }]
+                            }
+                        });
+                    });
+                </script>
+                <!-- End Pie CHart -->
+
+            </div>
+        </div>
+    </div>
+</div>

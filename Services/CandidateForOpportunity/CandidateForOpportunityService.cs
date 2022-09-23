@@ -1,4 +1,5 @@
-﻿using DTO.Utils;
+﻿using DTO.CandidateForOpportunity;
+using DTO.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace Services.CandidateForOpportunity
 {
-    public class CandidateForOpportunityService
+    public class CandidateForOpportunityService : Shared.RepositoryService<ApplicationDbContext.Models.CandidateForOpportunity, CandidateForOpportunityViewModel, int>
     {
         readonly ApplicationDbContext.Context.ApplicationDbContext context;
-
-        public CandidateForOpportunityService(ApplicationDbContext.Context.ApplicationDbContext context)
+        public CandidateForOpportunityService(ApplicationDbContext.Context.ApplicationDbContext context) : base(context, "CandidateForOpportunityId")
         {
             this.context = context;
         }

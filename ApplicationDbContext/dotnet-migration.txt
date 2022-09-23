@@ -1,0 +1,2 @@
+dotnet ef migrations add AddThirdMigration  --startup-project VenturaHR --project ApplicationDbContext --context ApplicationDbContext.Context.ApplicationDbContext --output-dir Context\Migrations --verbose
+dotnet ef database update --startup-project VenturaHR --project ApplicationDbContext --context ApplicationDbContext.Context.ApplicationDbContext --verbose
