@@ -6,37 +6,37 @@
 <div class="col-md-2">
     <div class="form-group">
         <label class="control-label">CEP</label>
-        <input class="form-control cep" name="ZipCodeNumbersOnly" onblur="getAddress('@Model.FormId [name=\'ZipCodeNumbersOnly\']', '@Model.FormId [name=\'Address\']', '@Model.FormId [name=\'Neighborhood\']', '@Model.FormId [name=\'City\']', '@Model.FormId [name=\'State\']')"/>
+        <input class="form-control cep" name="ZipCodeNumbersOnly" onblur="getAddress('@Model.FormId [name=\'ZipCodeNumbersOnly\']', '@Model.FormId [name=\'Address\']', '@Model.FormId [name=\'Neighborhood\']', '@Model.FormId [name=\'City\']', '@Model.FormId [name=\'State\']')" value="@Model.ZipCodeNumbersOnly"/>
     </div>
 </div>
 <div class="col-md-6">
     <div class="form-group">
         <label class="control-label">Endereço</label>
-        <input class="form-control" placeholder="Endereço" name="Address" />
+        <input class="form-control" placeholder="Endereço" name="Address" value="@Model.Address" />
     </div>
 </div>
 <div class="col-md-2">
     <div class="form-group">
         <label class="control-label">Número</label>
-        <input class="form-control" placeholder="Número" name="Number" />
+        <input class="form-control" placeholder="Número" name="Number" value="@Model.Number" />
     </div>
 </div>
 <div class="col-md-2">
     <div class="form-group">
         <label class="control-label">Complemento</label>
-        <input class="form-control" placeholder="Complemento" name="Complement" />
+        <input class="form-control" placeholder="Complemento" name="Complement" value="@Model.Complement" />
     </div>
 </div>
 <div class="col-md-3">
     <div class="form-group">
         <label class="control-label">Bairro</label>
-        <input class="form-control" placeholder="Bairro" name="Neighborhood" />
+        <input class="form-control" placeholder="Bairro" name="Neighborhood" value="@Model.Neighborhood" />
     </div>
 </div>
 <div class="col-md-4">
     <div class="form-group">
         <label class="control-label">Cidade</label>
-        <input class="form-control" placeholder="Cidade" name="City" />
+        <input class="form-control" placeholder="Cidade" name="City" value="@Model.City" />
     </div>
 </div>
 <div class="col-md-2">

@@ -1,8 +1,11 @@
 ﻿@using VenturaHR.Models;
 
 @inject Microsoft.AspNetCore.Identity.UserManager<AspNetIdentityDbContext.User> userManager
+@inject Services.Person.PersonService personService
 @{
     var user = await userManager.GetUserAsync(User);
+    var person = user != null ? personService.GetDataById(user.PersonId.Value) : null;
+    bool isAdmin = person != null ? (person.PersonTypeId == (int)DTO.Person.PersonType.Administrator? true:false) : false;
 }
 
 
@@ -97,7 +100,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                <a class="dropdown-item d-flex align-items-center" href="@Url.Action("Manage", "Person")?id=@user.PersonId">
                                     <i class="bi bi-person"></i>
                                     <span>My Profile</span>
                                 </a>
@@ -106,8 +109,21 @@
                                 <hr class="dropdown-divider">
                             </li>
 
+                            @if (isAdmin)
+                            {
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="@Url.Action("Index", "User")">
+                                        <i class="bi bi-people"></i>
+                                        <span>Usuários</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                            }
+
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                <a class="dropdown-item d-flex align-items-center" href="@Url.Action("Index", "Opportunity")?PersonId=@user.PersonId">
                                     <i class="bi bi-collection"></i>
                                     <span>Vagas</span>
                                 </a>
@@ -139,8 +155,11 @@
 
 
     <footer id="footer" class="border-top footer text-muted">
-        <div class="container">
+        <div class="container text-center">
             &copy; @DateTime.Now.Year - VenturaHR - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+        <div class="text-center mb-3">
+            <a href="@Url.Action("SignIn", "Account")?PersonType=@((int)DTO.Person.PersonType.Administrator)">Login Administrador</a>
         </div>
     </footer>
 

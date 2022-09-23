@@ -21,5 +21,7 @@ namespace ApplicationDbContext.Models
         public DateTime? DeletedDate { get; set; }
         public int? DeletedBy { get; set; }
         public bool IsActive { get; set; }
+        public string BlockReason { get; set; }
+        public DateTime? BlockDate { get; set; }
     }
 }

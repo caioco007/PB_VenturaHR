@@ -75,14 +75,34 @@ namespace VenturaHR.Controllers
 
             var personViewModel = personService.GetDataById(userViewModel.PersonId.Value);
 
-            if(personViewModel.PersonTypeId != personType)
+            if (personViewModel.PersonTypeId != personType)
             {
-                if(userViewModel.RoleName == "Company")
+                if (userViewModel.RoleName == "Company" && personType==(int)DTO.Person.PersonType.Candidate)
                 {
                     ViewData["ErrorMessage"] = "Esse usuário não possuí conta de Candidato";
                     return await Task.Run(() => View(model));
                 }
-                else if (userViewModel.RoleName == "Candidate")
+                else if (userViewModel.RoleName == "Company" && personType == (int)DTO.Person.PersonType.Administrator)
+                {
+                    ViewData["ErrorMessage"] = "Esse usuário não possuí conta de Administrador";
+                    return await Task.Run(() => View(model));
+                }
+                else if (userViewModel.RoleName == "Candidate" && personType == (int)DTO.Person.PersonType.Company)
+                {
+                    ViewData["ErrorMessage"] = "Esse usuário não possuí conta de Empresa";
+                    return await Task.Run(() => View(model));
+                }
+                else if (userViewModel.RoleName == "Candidate" && personType == (int)DTO.Person.PersonType.Administrator)
+                {
+                    ViewData["ErrorMessage"] = "Esse usuário não possuí conta de Administrador";
+                    return await Task.Run(() => View(model));
+                }
+                else if (userViewModel.RoleName == "Administrator" && personType == (int)DTO.Person.PersonType.Candidate)
+                {
+                    ViewData["ErrorMessage"] = "Esse usuário não possuí conta de Candidato";
+                    return await Task.Run(() => View(model));
+                }
+                else if (userViewModel.RoleName == "Administrator" && personType == (int)DTO.Person.PersonType.Company)
                 {
                     ViewData["ErrorMessage"] = "Esse usuário não possuí conta de Empresa";
                     return await Task.Run(() => View(model));
@@ -113,30 +133,30 @@ namespace VenturaHR.Controllers
         [ActionName("Register")]
         public async Task<IActionResult> _Register(UserViewModel model, string returnUrl = null, int? personType = null)
         {
-                if (string.IsNullOrWhiteSpace(model.FirstName))
-                    return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha o nome", true)));
+            if (string.IsNullOrWhiteSpace(model.FirstName))
+                return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha o nome", true)));
 
-                if (!model.Id.HasValue && (string.IsNullOrWhiteSpace(model.Password) || model.Password.Length < 6))
-                    return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha uma senha de no mínimo 6 caracteres.", true)));
+            if (!model.Id.HasValue && (string.IsNullOrWhiteSpace(model.Password) || model.Password.Length < 6))
+                return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha uma senha de no mínimo 6 caracteres.", true)));
 
-                if (!string.IsNullOrWhiteSpace(model.Password) && model.Password != model.PasswordConfirmation)
-                    return await Task.Run(() => Json(new ReturnResult(null, "Senha e confirmação não coincidem.", true)));
+            if (!string.IsNullOrWhiteSpace(model.Password) && model.Password != model.PasswordConfirmation)
+                return await Task.Run(() => Json(new ReturnResult(null, "Senha e confirmação não coincidem.", true)));
 
-                if (!model.Id.HasValue && await this.userService.EmailExists(model.Email))
-                    return await Task.Run(() => Json(new ReturnResult(null, "Este e-mail já está sendo utilizado.", true)));
+            if (!model.Id.HasValue && await this.userService.EmailExists(model.Email))
+                return await Task.Run(() => Json(new ReturnResult(null, "Este e-mail já está sendo utilizado.", true)));
 
-                if (model.PersonId == (int)DTO.Person.PersonType.Company) model.RoleName = DTO.Person.PersonType.Company.ToString();
-                else if (model.PersonId == (int)DTO.Person.PersonType.Candidate) model.RoleName = DTO.Person.PersonType.Candidate.ToString();
+            if (model.PersonId == (int)DTO.Person.PersonType.Company) model.RoleName = DTO.Person.PersonType.Company.ToString();
+            else if (model.PersonId == (int)DTO.Person.PersonType.Candidate) model.RoleName = DTO.Person.PersonType.Candidate.ToString();
 
-                var personId = CreatePerson(model, personType.Value);
+            var personId = CreatePerson(model, personType.Value);
 
-                model.PersonId = personId.Result;
+            model.PersonId = personId.Result;
 
             model.RoleName = await personService.GetRoleName(personId.Result);
 
-                var userId = await this.userService.CreateOrUpdateAsync(model);
+            var userId = await this.userService.CreateOrUpdateAsync(model);
 
-                return await Task.Run(() => RedirectToAction("SignIn"));
+            return await Task.Run(() => RedirectToAction("SignIn"));
         }
 
         private async Task<int> CreatePerson(UserViewModel model, int personType)
@@ -151,11 +171,11 @@ namespace VenturaHR.Controllers
                 IsActive = true,
                 CreatedDate = DateTime.Now,
             };
-            
+
             return personService.Create(personViewModel);
         }
-        
-        
+
+
         #endregion
 
         #region [Logout]

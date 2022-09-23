@@ -1,0 +1,131 @@
+﻿@inject Services.User.UserService userService
+
+
+<table id="user-index-table" class="table table-borderless datatable">
+    <thead>
+        <tr>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Email</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">Ativo?</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div class="modal fade" id="BlockModal" aria-hidden="true" aria-labelledby="BlockLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="BlockLabel">Bloquear Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="_userId" name="UserId" value="" />
+                <div class="col-md-9">
+                    <label for="inputMotivo" class="form-label">Motivo:</label>
+                    <input type="text" class="form-control" name="Motivo" id="inputMotivo">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col">
+                    <button class="btn btn-secondary float-left" data-bs-dismiss="modal"><i class="las la-times"></i>&nbsp;Fechar</button>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-danger" onclick="BlockButton()"><i class="las la-trash" title="Selecione"></i>&nbsp;Bloquear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script asp-cut-key="user-index">
+    var userDataTables;
+    $(document).ready(function () {
+        companyDataTables = $('#user-index-table').DataTable({
+            serverSide: false,
+            proccessing: true,
+            searching: true,
+            lengthChange: false,
+            pageLength: 30,
+            dom: 'tip',
+            ajax: {
+                url: '@Url.Action("List", "User")'
+                , data: function (d) {}
+                , type: 'POST'
+            },
+            columns: [
+                { render: function (data, type, row) { return row.userId; }, visible: false  },
+                { render: function (data, type, row) { return row.nome; } },
+                { render: function (data, type, row) { return row.email; } },
+                { render: function (data, type, row) { return row.cpf == null ? row.cnpj : row.cpf; } },
+                { render: function (data, type, row) { return row.phoneNumber == null ? row.mobileNumber : row.phoneNumber; } },
+                {
+                    render: function (data, type, row) {
+                        return row.isActive ?
+                            '<a href="javascript:void(0)" onclick="BlockUser(' + row.userId + ')"><span class="badge rounded-pill bg-success">Sim</span></a>' :
+                            '<a href="javascript:void(0)" onclick="ActiveUser(' + row.userId + ')"><span class="badge rounded-pill bg-danger">Não</span></a>'
+                            ;
+                    }
+                },
+            ],
+            drawCallback: initializeCopyToClipboard
+
+		});
+    });
+</script>
+<script>
+    function BlockUser(userId) {
+        $("#_userId").val(userId);
+        $("#inputMotivo").val("");
+        $('#BlockModal').modal('show');
+    }
+
+    function BlockButton() {
+        var motivo = $('#inputMotivo').val();
+        if (motivo == '') {
+            alert('Insira o motivo.');
+            return;
+        }
+
+        $('#BlockModal').modal('hide');
+        var userId = $('#_userId').val();
+        _BlockUser(userId, motivo, function () {
+            $('#user-index-table').DataTable().ajax.reload();
+            alert("Usuário bloqueado com sucesso!");
+        });
+    }
+
+    function _BlockUser(_userId, _motivo, callback) {
+        var d = { id: _userId, motivo:  _motivo};
+		$.ajax({
+			url: '@Url.Action("BlockUser", "User")',
+            type: 'POST',
+            data: d,
+			dataType: 'Json',
+			success: callback
+		});
+    }
+
+    function ActiveUser(userId) {
+        _ActiveUser(userId, function () {
+            $('#user-index-table').DataTable().ajax.reload();
+            alert("Usuário ativo com sucesso!");
+        });
+    }
+    
+    function _ActiveUser(_userId, callback) {
+        var d = { id: _userId};
+		$.ajax({
+			url: '@Url.Action("ActiveUser", "User")',
+            type: 'POST',
+            data: d,
+			dataType: 'Json',
+			success: callback
+		});
+    }
+</script>

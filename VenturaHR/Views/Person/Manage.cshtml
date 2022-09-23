@@ -1,0 +1,61 @@
+﻿@model DTO.Person.PersonViewModel
+@{
+}
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Cadastro de Vagas</h5>
+
+        <!-- Multi Columns Form -->
+        <form action="@Url.Action("Manage", "Person")" method="post">
+            <input type="hidden" name="PersonId" value="@Model.PersonId" />
+            <div class="row">
+                @if (Model.PersonTypeId != (int)DTO.Person.PersonType.Company)
+                {
+                    <div class="col-md-9">
+                        <label for="inputFullName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" name="FullName" id="inputFullName" value="@Model.FullName">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="inputCPF" class="form-label">CPF</label>
+                        <input type="text" class="form-control cpf" name="Cpf" id="inputCPF" value="@Model.CpfNumbers">
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-9">
+                        <label for="inputCompanyName" class="form-label">Nome Fantasia</label>
+                        <input type="text" class="form-control" name="CompanyName" id="inputCompanyName" value="@Model.CompanyName">
+                    </div>
+                    <div class="col-md-9">
+                        <label for="inputTradeName" class="form-label">Razão Social</label>
+                        <input type="text" class="form-control" name="TradeName" id="inputTradeName" value="@Model.TradeName">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="inputCNPJ" class="form-label">CNPJ</label>
+                        <input type="text" class="form-control Cnpj" name="Cnpj" id="inputCNPJ" value="@Model.CnpjNumbers">
+                    </div>
+                }
+                <div class="col-md-6">
+                    <label for="inputEmail" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="Email" id="inputEmail" value="@Model.Email">
+                </div>
+                <div class="col-md-3">
+                    <label for="inputMobileNumber" class="form-label">Celular</label>
+                    <input type="text" class="form-control mobile" name="MobileNumber" id="inputMobileNumber" value="@Model.MobileNumber_NumbersOnly">
+                </div>
+                <div class="col-md-3">
+                    <label for="inputPhoneNumber" class="form-label">Telefone</label>
+                    <input type="text" class="form-control phone" name="PhoneNumber" id="inputPhoneNumber" value="@Model.PhoneNumber_NumbersOnly">
+                </div>
+            </div>
+            <div class="row">
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        </form><!-- End Multi Columns Form -->
+
+    </div>
+</div>

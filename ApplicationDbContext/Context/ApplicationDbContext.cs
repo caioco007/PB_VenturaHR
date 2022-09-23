@@ -23,6 +23,7 @@ namespace ApplicationDbContext.Context
         public DbSet<CandidateForOpportunity> CandidateForOpportunity { get; set; }
         public DbSet<Opportunity> Opportunity { get; set; }
         public DbSet<OpportunityList> OpportunityList { get; set; }
+        public DbSet<UserList> UserList { get; set; }
         public DbSet<Person> Person { get; set; }
         public DbSet<PersonType> PersonType { get; set; }
 

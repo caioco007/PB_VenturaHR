@@ -43,6 +43,8 @@ namespace Services.Person
             return new ReturnResult(null, null, false);
         });
 
+        public int GetPersonTypeIdByPersonId(int personId) => GetDataById(personId).PersonTypeId;
+
         public async Task<ApplicationDbContext.Models.Person> GetDataByCNPCPFAsync(string cnpjCpf)
         {
             var cnpjCpfNumbersOnly = cnpjCpf.NumbersOnly();
@@ -61,7 +63,7 @@ namespace Services.Person
             return this.dbSet.SingleOrDefault(x => x.Cnpj == cnpjCpfNumbersOnly && !x.IsDeleted);
         }
 
-        public override int Create(PersonViewModel model)
+        public override async Task<int> CreateAsync(PersonViewModel model)
         {
             var person = new ApplicationDbContext.Models.Person
             {
@@ -71,6 +73,7 @@ namespace Services.Person
                 Cnpj = model.Cnpj,
                 FullName = model.FullName,
                 Cpf = model.Cpf,
+                Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 MobileNumber = model.MobileNumber,
                 CreatedDate = model.CreatedDate,
@@ -83,10 +86,18 @@ namespace Services.Person
             return person.PersonId;
         }
 
-        public override void Update(PersonViewModel model)
+        public override async Task UpdateAsync(PersonViewModel model)
         {
             var person = GetDataById(model.PersonId.Value);
 
+            person.CompanyName = model.CompanyName;
+            person.TradeName = model.TradeName;
+            person.Cnpj = model.Cnpj;
+            person.FullName = model.FullName;
+            person.Cpf = model.Cpf;
+            person.Email = model.Email;
+            person.PhoneNumber = model.PhoneNumber;
+            person.MobileNumber = model.MobileNumber;
 
             this.dbSet.Update(person);
             this.context.SaveChanges();
@@ -110,6 +121,30 @@ namespace Services.Person
                     break;
             }
             return roleName;
+        }
+        
+        public async Task BlockPerson(int personId, string motivo)
+        {
+            var person = GetDataById(personId);
+
+            person.IsActive = false;
+            person.BlockDate = DateTime.Now;
+            person.BlockReason = motivo;
+
+            this.dbSet.Update(person);
+            this.context.SaveChanges();
+        }
+
+        public async Task ActivePerson(int personId)
+        {
+            var person = GetDataById(personId);
+
+            person.IsActive = true;
+            person.BlockDate = null;
+            person.BlockReason = "";
+
+            this.dbSet.Update(person);
+            this.context.SaveChanges();
         }
     }
 }

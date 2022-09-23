@@ -15,5 +15,6 @@ namespace Services.Person
         }
 
         public async Task<PersonType> GetDataByExternalCode(string externalCode) => await this.dbSet.SingleAsync(x => x.ExternalCode == externalCode);
+                
     }
 }

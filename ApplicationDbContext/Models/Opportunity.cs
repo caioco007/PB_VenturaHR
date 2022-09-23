@@ -20,7 +20,7 @@ namespace ApplicationDbContext.Models
         public string Neighborhood { get; set; }
         public string State { get; set; }
         public string City { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public int? CandidateId { get; set; }
         public int CompanyId { get; set; }

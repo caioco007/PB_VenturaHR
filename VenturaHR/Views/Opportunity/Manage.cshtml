@@ -10,12 +10,21 @@
     <div class="card-body">
         <h5 class="card-title">Cadastro de Vagas</h5>
 
+        @if (ViewData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-octagon me-1"></i>
+                @ViewData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <!-- Multi Columns Form -->
         <form action="@Url.Action("CompanyManage", "Opportunity")" method="post">
+            <input type="hidden" name="OpportunityId" value="@Model.OpportunityId" />
             <div class="row">
                 <div class="col-md-9">
                     <label for="inputOffice" class="form-label">Vaga</label>
-                    <input type="text" class="form-control" name="Office" id="inputOffice">
+                    <input type="text" class="form-control" name="Office" id="inputOffice" value="@Model.Office">
                 </div>
                 <div class="col-md-3">
                     <label for="inputEmployment" class="form-label">Tipo</label>
@@ -26,11 +35,11 @@
                 </div>
                 <div class="col-md-3">
                     <label for="inputSalary" class="form-label">Salário</label>
-                    <input type="text" class="form-control money" name="Salary" id="inputSalary" />
+                    <input type="text" class="form-control money" name="Salary" id="inputSalary" value="@Model._Salary" />
                 </div>
                 <div class="col-md-12">
                     <label for="inputDescription" class="form-label">Descrição</label>
-                    <textarea class="form-control" name="Description" id="inputDescription"></textarea>
+                    <textarea class="form-control" name="Description" id="inputDescription">@Model.Description</textarea>
                 </div>
             </div>
             <div class="row">

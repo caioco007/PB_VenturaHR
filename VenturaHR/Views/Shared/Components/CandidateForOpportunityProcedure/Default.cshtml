@@ -1,0 +1,21 @@
+﻿@model List<DTO.CandidateForOpportunity.CandidateForOpportunityProcedureViewModel>
+
+<table class="table table-striped table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@item.FullName</th>
+                <th class="text-nowrap">@item.MobileNumber </th>
+                <th class="text-nowrap">@item.Email</th>
+            </tr>
+        }
+    </tbody>
+</table>

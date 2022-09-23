@@ -61,12 +61,20 @@ namespace VenturaHR
             services.AddScoped<Helpers.ViewEngineHelper>();
 
             services.AddScoped<Services.User.UserService>();
+            services.AddScoped<Services.User.UserListService>();
 
             services.AddScoped<Services.Person.PersonService>();
             services.AddScoped<Services.Person.PersonTypeService>();
 
             services.AddScoped<Services.Opportunity.OpportunityService>();
             services.AddScoped<Services.Opportunity.OpportunityListService>();
+
+            services.AddScoped < Services.CandidateForOpportunity.CandidateForOpportunityService>();
+
+            services.AddScoped<Services.Mail.MailService>();
+
+            services.AddHostedService<Services.BackgroundServices.ExpiredOpportunityService>();
+            services.AddHostedService<Services.BackgroundServices.FinishedOpportunityService>();
             #endregion
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();

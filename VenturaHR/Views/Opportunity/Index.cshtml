@@ -1,24 +1,72 @@
 ﻿@inject Services.Person.PersonTypeService personTypeService
 
+@{
+    int? personId = 0;
+    if (ViewData.ContainsKey("PersonId"))
+    {
+        personId = (int)ViewData["PersonId"];
+    }
+
+    int? personTypeId = null;
+    if (ViewData.ContainsKey("PersonTypeId"))
+    {
+        personTypeId = (int)ViewData["personTypeId"];
+    }
+}
 
 <table id="opportunity-index-table" class="table table-borderless datatable">
     <thead>
         <tr>
-            <th scope="col">&nbsp;</th>
+            <th scope="col">Id</th>
             <th scope="col">Vaga</th>
             <th scope="col">Empresa</th>
             <th scope="col">Descrição</th>
-            <th scope="col">Cidade - UF</th>
-            <th scope="col">&nbsp;</th>
+            <th scope="col" class="text-nowrap">Cidade - UF</th>
+            @if (personTypeId != null)
+            {
+                <th scope="col">Status</th>
+            }
+            @if (personTypeId == (int)DTO.Person.PersonType.Company)
+            {
+                <th scope="col" class="text-center">Candidatos</th>
+                <th scope="col">Ações</th>
+            }
         </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
 
+
+<div class="modal fade" id="candidates-opportunity-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Canidatos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="candidates-opportunity-view-component" style="max-height: 400px; overflow-x: auto; "></div>
+            </div>
+            <div class="modal-footer d-block">
+                <button type="submit" aria-label="Close" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function openCandidatesOpportunityModal(opportunityId) {
+        $('#candidates-opportunity-view-component').load('@Url.Action("LoadCandidateForOpportunityProcedureViewComponent", "Opportunity")', { opportunityId }, function() {
+            $("#candidates-opportunity-modal").modal('show');
+        });
+    }
+</script>
+
 <script asp-cut-key="opportunity-index">
     var opportunityDataTables;
-    console.log('teste');
     $(document).ready(function () {
         companyDataTables = $('#opportunity-index-table').DataTable({
             serverSide: false,
@@ -28,20 +76,92 @@
             pageLength: 30,
             dom: 'tip',
             ajax: {
-                url: '@Url.Action("List", "Opportunity")'
-                , data: function (d) {}
-                , type: 'POST'
+                url: '@Url.Action("List", "Opportunity")',
+                data: function (d) {
+                    d.personId = @(personId);
+                },
+                type: 'POST'
             },
             columns: [
-                { render: function (data, type, row) { return row.opportunityId; }, visible: false  },
+                {
+                    render: function (data, type, row) {
+                        if (row.companyId == @personId && row.statusName != '@DTO.Opportunity.StatusTypes.Finalizada') {
+                            return `<a href="@Url.Action("CompanyManage", "Opportunity")/?id=${row.opportunityId}" >#${row.opportunityId}</a>`;
+                        }
+                        else {
+                            return `<a href="@Url.Action("Detail", "Opportunity")/?id=${row.opportunityId}" >#${row.opportunityId}</a>`;
+                        }
+                    }
+                },
                 { render: function (data, type, row) { return row.office; } },
                 { render: function (data, type, row) { return row.companyName; } },
                 { render: function (data, type, row) { return row.description; } },
-                { render: function (data, type, row) { return row.local; } },
-                { render: function (data, type, row) { return "teste"; } },
+                { render: function (data, type, row) { return row.local; } }
+                @if (personTypeId != null)
+                {
+                    <text>
+                        ,{ render: function (data, type, row) { return row.statusName; } }
+                    </text>
+                }
+                @if (personTypeId == (int)DTO.Person.PersonType.Company)
+                {
+                    <text>
+                        ,{ render: function (data, type, row) { return '<div class="text-center"><a href="javascript:openCandidatesOpportunityModal(\'' + row.opportunityId + '\')"><i class="bi bi-file-earmark-person"></i></a></div>'; } }
+                        ,{ render: function (data, type, row) { return getListOpportunityCompany(row); } }
+                    </text>
+                }
+
             ],
             drawCallback: initializeCopyToClipboard
 
-		});
+
+        });
     });
+
+    function getListOpportunityCompany(row) {
+        if (row.statusName == '@DTO.Opportunity.StatusTypes.Finalizada') return "";
+        var div = '<div class="text-center text-nowrap"">';
+        div += `<a href="javascript:void(0)" onclick="FinalizarOpportunity(${row.opportunityId})" title="Finalizar Vaga"><i class="bi bi-x-circle"></i></a>`;
+        div += `&nbsp;&nbsp;<a href="javascript:void(0)" onclick="RenovarOpportunity(${row.opportunityId})" title="Renovar Vaga"><i class="bi bi-arrow-clockwise"></i></a>`;
+        div += `</div>`;
+        return div;
+    }
+</script>
+<script>
+    function FinalizarOpportunity(opportunityId) {
+        console.log(opportunityId);
+        _FinalizarOpportunity(opportunityId, function () {
+            $('#opportunity-index-table').DataTable().ajax.reload();
+            alert("Vaga Finalizada com sucesso!");
+        });
+    }
+
+    function _FinalizarOpportunity(_opportunityId, callback) {
+        var d = { opportunityId: _opportunityId};
+		$.ajax({
+			url: '@Url.Action("FinalizarOpportunity", "Opportunity")',
+            type: 'POST',
+            data: d,
+			dataType: 'Json',
+			success: callback
+		});
+    }
+
+    function RenovarOpportunity(opportunityId) {
+        _RenovarOpportunity(opportunityId, function () {
+            $('#opportunity-index-table').DataTable().ajax.reload();
+            alert("Vaga Renovada com sucesso!");
+        });
+    }
+
+    function _RenovarOpportunity(_opportunityId, callback) {
+        var d = { opportunityId: _opportunityId};
+		$.ajax({
+			url: '@Url.Action("RenovarOpportunity", "Opportunity")',
+            type: 'POST',
+            data: d,
+			dataType: 'Json',
+			success: callback
+		});
+    }
 </script>

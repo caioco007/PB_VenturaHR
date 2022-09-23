@@ -5,6 +5,7 @@ using DTO.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Services.CandidateForOpportunity;
 using Services.Opportunity;
 using Services.Person;
 using Services.Shared;
@@ -23,20 +24,31 @@ namespace VenturaHR.Controllers
         readonly PersonTypeService personTypeService;
         readonly OpportunityService opportunityService;
         readonly OpportunityListService opportunityListService;
+        readonly CandidateForOpportunityService candidateForOpportunityService;
         readonly ViewEngineHelper viewEngineHelper;
         private readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public OpportunityController(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, OpportunityListService opportunityListService, ViewEngineHelper viewEngineHelper, UserManager<AspNetIdentityDbContext.User> userManager)
+        public OpportunityController(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, OpportunityListService opportunityListService, CandidateForOpportunityService candidateForOpportunityService, ViewEngineHelper viewEngineHelper, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;
             this.opportunityService = opportunityService;
             this.opportunityListService = opportunityListService;
+            this.candidateForOpportunityService = candidateForOpportunityService;
             this.viewEngineHelper = viewEngineHelper;
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> Index() => await Task.Run(() => View());
+        public async Task<IActionResult> Index(int? personId)
+        {
+            if (personId.HasValue)
+            {
+                var personTypeId = personService.GetDataById(personId.Value).PersonTypeId;
+                ViewData["PersonId"] = personId.Value;
+                ViewData["PersonTypeId"] = personTypeId;
+            }
+            return await Task.Run(() => View());
+        } 
 
         [HttpPost]
         [ActionName("CompanyManage")]
@@ -47,6 +59,16 @@ namespace VenturaHR.Controllers
             {
                 var user = await userManager.GetUserAsync(User);
                 model.CompanyId = user.PersonId.Value;
+                if (model.OpportunityId.HasValue)
+                {
+                    int countCandidateForOpportunity = await candidateForOpportunityService.GetGountCandidateForOpportunity(model.OpportunityId.Value);
+
+                    if (countCandidateForOpportunity > 0)
+                    {
+                        ViewData["ErrorMessage"] = "Não foi possível fazer alteração, têm candidato inscrito nessa vaga.";
+                        return await Task.Run(() => View("Manage", model));
+                    }
+                }
                 model.OpportunityId = await this.opportunityService.CreateOrUpdateAsync(model);
             }
             catch (Exception exception)
@@ -67,7 +89,6 @@ namespace VenturaHR.Controllers
             return await Task.Run(() => View("Manage", model));
         }
 
-        [Authorize(Roles = ClaimHelper.AuthorizationCandidateRoles)]
         public async Task<IActionResult> Detail(int? id)
         {
             var model = await opportunityService.GetViewModelByIdAsync(id.Value);
@@ -75,26 +96,44 @@ namespace VenturaHR.Controllers
             return await Task.Run(() => View("Detail", model));
         }
 
+        public async Task<IActionResult> LoadCandidateForOpportunityProcedureViewComponent(int opportunityId) => await Task.Run(() => ViewComponent(typeof(ViewComponents.CandidateForOpportunityProcedureViewComponent.CandidateForOpportunityProcedureViewComponent), new { opportunityId }));
+
         [HttpPost]
         [Authorize(Roles = ClaimHelper.AuthorizationCandidateRoles)]
         public async Task<IActionResult> InterestedOpportunity(DTO.Opportunity.OpportunityViewModel model)
         {
             var user = await userManager.GetUserAsync(User);
 
-            await opportunityService.CreateCandidateForOpportunity(user.Id, model.OpportunityId.Value);
+            await candidateForOpportunityService.CreateCandidateForOpportunity(user.PersonId, model.OpportunityId.Value);
 
             return await Task.Run(() => View("Detail", model));
         }
 
-        public virtual async Task<IActionResult> List(DataTablesAjaxPostModel filter)
+        public virtual async Task<IActionResult> List(DataTablesAjaxPostModel filter, int? personId)
         {
+            var person = personId.HasValue && personId > 0? personService.GetDataById(personId.Value) : null;
+            string query = "";
             var parameters = new SqlParameterList();
             parameters.AddParameter("IsDeleted", false);
+            if (personId.HasValue && personId > 0)
+            {
+                if (person.PersonTypeId == (int)DTO.Person.PersonType.Company) 
+                    parameters.AddParameter("CompanyId", personId);
+                else if (person.PersonTypeId == (int)DTO.Person.PersonType.Candidate)
+                {
+                    var opportunityIds = await candidateForOpportunityService.GetOpportunityIdByCandidateId(personId.Value);
+                    if (opportunityIds.Count > 0)
+                    {
+                        query = $"OpportunityId IN ({string.Join(",", opportunityIds.Select(x => x.ToString()))}) ";
+                        //parameters.AddParameter("OpportunityId", string.Join(",", opportunityIds.Select(x => x.ToString())));
+                    }
+                }
+            }
 
             List<OpportunityListViewModel> data = new List<OpportunityListViewModel>();
             int recordsTotal = 0, recordsFiltered = 0;
 
-            var filterData = opportunityListService.GetDataFiltered(filter, out recordsTotal, out recordsFiltered, parameters.GetQuery(), parameters.GetParameters());
+            var filterData = opportunityListService.GetDataFiltered(filter, out recordsTotal, out recordsFiltered, query, parameters.GetParameters());
 
             data = opportunityListService.ToViewModel(filterData);
 
@@ -104,6 +143,28 @@ namespace VenturaHR.Controllers
                 recordsFiltered,
                 data
             }));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ClaimHelper.AuthorizationCompanyRoles)]
+        public async Task<IActionResult> FinalizarOpportunity(int? opportunityId)
+        {
+            if(!opportunityId.HasValue) return Json(false);
+
+            await opportunityService.UpdateStatusOpportunity(opportunityId.Value, DTO.Opportunity.StatusTypes.Finalizada);
+
+            return Json(true);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ClaimHelper.AuthorizationCompanyRoles)]
+        public async Task<IActionResult> RenovarOpportunity(int? opportunityId)
+        {
+            if (!opportunityId.HasValue) return Json(false);
+
+            await opportunityService.UpdateStatusOpportunity(opportunityId.Value, DTO.Opportunity.StatusTypes.Publicada);
+
+            return Json(true);
         }
     }
 }

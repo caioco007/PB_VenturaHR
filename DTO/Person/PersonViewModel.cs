@@ -36,6 +36,9 @@ namespace DTO.Person
         [Update]
         public bool IsActive { get; set; }
 
+        public string BlockReason { get; set; }
+        public DateTime? BlockDate { get; set; }
+
         public bool IsCompany => string.IsNullOrWhiteSpace(Cpf);
         public string Name => IsCompany ? CompanyName : FullName;
         public string AlternativeName => IsCompany ? TradeName : FullName; 

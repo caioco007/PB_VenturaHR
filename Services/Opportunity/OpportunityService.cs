@@ -1,5 +1,7 @@
 ﻿using DTO.Opportunity;
 using DTO.Shared;
+using DTO.Utils;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -63,21 +65,52 @@ namespace Services.Opportunity
             this.context.SaveChanges();
         }
 
-        public async Task<ApplicationDbContext.Models.CandidateForOpportunity> CreateCandidateForOpportunity(int? candidateId, int? opportunityId)
+        public async Task<List<int>> ObterOpportunityExpired()
         {
-            if(!candidateId.HasValue || !candidateId.HasValue) return null;
-
-            var candidateForOpportunity = new ApplicationDbContext.Models.CandidateForOpportunity
+            try
             {
-                CandidateId = candidateId.Value,
-                OpportunityId = opportunityId.Value,
-                CreatedDate = DateTime.Now,
-                IsDeleted = false
-            };
-            this.context.CandidateForOpportunity.Add(candidateForOpportunity);
-            this.context.SaveChanges();
+                var now = DateTime.Now;
+                var opportunityExpired = await context.Opportunity.
+                                                        Where(x => x.IsDeleted == false).
+                                                        ToListAsync();
+                var expiredDate = opportunityExpired.Where(x => (x.ExpirationDate != null && (x.ExpirationDate.Value.Date - now.Date).Days == 0)).Select(x => x.OpportunityId).ToList();
+                return expiredDate;
+            }
+            catch (Exception exception)
+            {
+                return null;
+            }        
+        }
 
-            return candidateForOpportunity;
+        public async Task<List<int>> ObterOpportunityFinished()
+        {
+            try
+            {
+                var now = DateTime.Now;
+                var opportunityExpired = await context.Opportunity.
+                                                        Where(x => x.IsDeleted == false).
+                                                        ToListAsync();
+                var expiredDate = opportunityExpired.Where(x => (x.ExpirationDate != null && (x.ExpirationDate.Value.Date - now.Date).Days == -2)).Select(x => x.OpportunityId).ToList();
+                return expiredDate;
+            }
+            catch (Exception exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task UpdateStatusOpportunity(int opportunityId, DTO.Opportunity.StatusTypes statusTypes)
+        {
+            var entity = await this.dbSet.SingleAsync(x => x.OpportunityId == opportunityId);
+
+            entity.StatusId = (int)statusTypes;
+            if((int)statusTypes == (int)DTO.Opportunity.StatusTypes.Publicada)
+            {
+                entity.ExpirationDate = DateTime.Now.AddDays(30);
+            }
+
+            this.dbSet.Update(entity);
+            await this.context.SaveChangesAsync();
         }
     }
 }

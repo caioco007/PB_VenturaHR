@@ -187,5 +187,36 @@ namespace Services.User
 
             return false;
         }
+        
+        public async Task<bool> Exists(int? userId)
+        {
+            if (userId == null) return false;
+
+            var user = GetDataById(userId.Value);
+
+            if(user == null) return false;
+
+            return true;
+        }
+
+        public async Task BlockUser(int userId)
+        {
+            var user = GetDataById(userId);
+
+            user.IsActive = false;
+
+            this.dbSet.Update(user);
+            this.context.SaveChanges();
+        }
+
+        public async Task ActiveUser(int userId)
+        {
+            var user = GetDataById(userId);
+
+            user.IsActive = true;
+
+            this.dbSet.Update(user);
+            this.context.SaveChanges();
+        }
     }
 }

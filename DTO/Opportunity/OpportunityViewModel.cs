@@ -27,7 +27,7 @@ namespace DTO.Opportunity
         }
         public double? Salary { get; set; }
         public string _Salary { get { return Salary.ToPtBR(); } }
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         public DateTime CreatedDate { get; set; }
         [Update]
         public int? CandidateId { get; set; }
