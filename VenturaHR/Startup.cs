@@ -69,7 +69,9 @@ namespace VenturaHR
             services.AddScoped<Services.Opportunity.OpportunityService>();
             services.AddScoped<Services.Opportunity.OpportunityListService>();
 
-            services.AddScoped < Services.CandidateForOpportunity.CandidateForOpportunityService>();
+            services.AddScoped <Services.CandidateForOpportunity.CandidateForOpportunityService>();
+            services.AddScoped <Services.OpportunityCriterion.OpportunityCriterionService>();
+            services.AddScoped <Services.ResponseCriterion.ResponseCriterionService>();
 
             services.AddScoped<Services.Mail.MailService>();
 

@@ -38,12 +38,26 @@
                     <input type="text" class="form-control money" name="Salary" id="inputSalary" value="@Model._Salary" />
                 </div>
                 <div class="col-md-12">
-                    <label for="inputDescription" class="form-label">Descrição</label>
+                    <label for="inputDescription" class="form-label">Descrição da Vaga</label>
                     <textarea class="form-control" name="Description" id="inputDescription">@Model.Description</textarea>
                 </div>
             </div>
             <div class="row">
                 @(await Component.InvokeAsync<VenturaHR.ViewComponents.Shared.AddressViewComponent>(Model.CopyToEntity<DTO.Shared.AddressViewModel>()))
+            </div>
+
+            <div class="row">
+                <div id="criterion-module-container">
+                    <div id="criteria-container">
+                        @(await Component.InvokeAsync<VenturaHR.ViewComponents.OpportunityCriteria.OpportunityCriteriaViewComponent>(Model.Criteria))
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" onclick="opportunityCriterionModule.newCriterion()" class="btn btn-outline-primary float-end"><i class="las la-plus-circle"></i> Novo Critério</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="row">
@@ -58,3 +72,54 @@
 
     </div>
 </div>
+
+<div id="criterion-clone-div" class="mb-3 border-primary opportunity-criterion-container d-none">
+    <div class="row">
+        <div class="col-md-11">
+            @(await Component.InvokeAsync<VenturaHR.ViewComponents.OpportunityCriterion.OpportunityCriterionViewComponent>(new { index = -1, opportunityCriterionViewModel = new DTO.OpportunityCriterion.OpportunityCriterionViewModel() }))
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    class OpportunityCriterionModule {
+        constructor(containerId) {
+            this.container = document.getElementById(containerId);
+            this.criteriaContainer = this.container.querySelector(`#criteria-container`);
+            this.criterionCloneDiv = document.getElementById(`criterion-clone-div`);
+        }
+
+        newCriterion() {
+            let clone = this.criterionCloneDiv.cloneNode(true);
+            clone.removeAttribute(`id`);
+            clone.classList.remove(`d-none`);
+            this.criteriaContainer.appendChild(clone);
+            this.normalizeCristeriaIndex();
+        }
+        removeCriterion(elem) {
+            if (confirm(`Atenção! Deseja realmente remover este critério?`)) {
+                if (this.criteriaContainer.querySelectorAll(`.opportunity-criterion`).length > 1) {
+                    let opportunityCriterionContainer = elem.closest(`.opportunity-criterion-container`);
+                    opportunityCriterionContainer.remove();
+                    normalizeCristeriaIndex();
+                } else {
+                    alert(`É necessário ter ao menos um critério.`);
+                }
+            }
+        }
+
+        normalizeCristeriaIndex() {
+            let criterionIndex = 0;
+            criteriaContainer.querySelectorAll(`.opportunity-criterion`).forEach((v, k) => {
+                v.querySelectorAll(`input, select`).forEach((v2, k2) => {
+                    v2.setAttribute(`name`, v2.getAttribute(`data-name`).replace(`-1`, criterionIndex));
+                });
+                criterionIndex++;
+            });
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    var opportunityCriterionModule = new OpportunityCriterionModule(`criterion-module-container`);
+</script>

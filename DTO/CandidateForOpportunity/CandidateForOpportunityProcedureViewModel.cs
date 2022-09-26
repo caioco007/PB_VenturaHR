@@ -10,5 +10,6 @@ namespace DTO.CandidateForOpportunity
         public string FullName { get; set; }
         public string MobileNumber { get; set; }
         public string Email { get; set; }
+        public double? NotesByOpportunity { get; set; }
     }
 }

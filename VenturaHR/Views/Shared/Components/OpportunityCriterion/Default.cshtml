@@ -1,0 +1,30 @@
+﻿@model VenturaHR.ViewComponents.OpportunityCriterion.OpportunityCriterionViewComponent.Wrapper
+
+
+<div data-opportunity-criterion-index="@Model.Index" class="opportunity-criterion">
+    @*<input type="hidden" value="@((Model.Index == 0).ToString())" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), -1, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.Main))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), Model.Index, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.Main))" />*@
+    @*SEMPRE RECRIAMOS O CLAIMANT*@
+    @*<input type="hidden" value="@Model.ClaimantInfo.LeaseGuaranteeRequestClamaintId" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), -1, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.LeaseGuaranteeRequestClamaintId))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), Model.Index, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.LeaseGuaranteeRequestClamaintId))" />*@
+    <div class="row">
+        <div class="col-md-3">
+            <label for="inputCriterion" class="form-label">Critério</label>
+            <input type="text" class="form-control" data-scope-id="@nameof(Model.OpportunityCriterionViewModel.Criterion)" value="@Model.OpportunityCriterionViewModel.Criterion" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), -1, nameof(DTO.OpportunityCriterion.OpportunityCriterionViewModel.Criterion))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), Model.Index, nameof(DTO.OpportunityCriterion.OpportunityCriterionViewModel.Criterion))" id="inputCriterion" />
+        </div>
+        <div class="col-md-3">
+            <label for="inputDescriptionCriterion" class="form-label">Descrição</label>
+            <input type="text" class="form-control" data-scope-id="@nameof(Model.OpportunityCriterionViewModel.Description)" value="@Model.OpportunityCriterionViewModel.Description" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), -1, nameof(DTO.OpportunityCriterion.OpportunityCriterionViewModel.Description))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), Model.Index, nameof(DTO.OpportunityCriterion.OpportunityCriterionViewModel.Description))" id="inputDescriptionCriterion" />
+        </div>
+        <div class="col-md-3">
+            <label for="inputWeight" class="form-label">Peso</label>
+            <input type="text" class="form-control" data-scope-id="@nameof(Model.OpportunityCriterionViewModel.Weight)" value="@Model.OpportunityCriterionViewModel.Weight" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), -1, nameof(DTO.OpportunityCriterion.OpportunityCriterionViewModel.Weight))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), Model.Index, nameof(DTO.OpportunityCriterion.OpportunityCriterionViewModel.Weight))" id="inputWeight" />
+        </div>
+    </div>
+    @if (Model.Index != 0)
+    {
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-outline-danger float-end remove-criterion" onclick="opportunityCriterionModule.removeCriterion(this)">Remover Critério</button>
+            </div>
+        </div>
+    }
+</div>

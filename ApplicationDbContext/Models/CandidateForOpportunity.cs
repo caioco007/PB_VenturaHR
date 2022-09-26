@@ -11,5 +11,6 @@ namespace ApplicationDbContext.Models
         public DateTime CreatedDate { get; set; }
         public int? CandidateId { get; set; }
         public bool IsDeleted { get; set; }
+        public double? NotesByOpportunity { get; set; }        
     }
 }

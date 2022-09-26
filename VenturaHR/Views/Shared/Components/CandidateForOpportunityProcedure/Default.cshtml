@@ -6,16 +6,18 @@
             <th>Nome</th>
             <th>Telefone</th>
             <th>Email</th>
+            <th>Notas</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <th>@item.FullName</th>
-                <th class="text-nowrap">@item.MobileNumber </th>
-                <th class="text-nowrap">@item.Email</th>
-            </tr>
+        <tr>
+            <th>@item.FullName</th>
+            <th class="text-nowrap">@item.MobileNumber </th>
+            <th class="text-nowrap">@item.Email</th>
+            <th class="text-nowrap">@item.NotesByOpportunity</th>
+        </tr>
         }
     </tbody>
 </table>

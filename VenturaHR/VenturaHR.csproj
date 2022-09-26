@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\OpportunityCriterion\**" />
     <Compile Remove="wwwroot\assets\vendor\simple-datatables\**" />
+    <Content Remove="Views\OpportunityCriterion\**" />
     <Content Remove="wwwroot\assets\vendor\simple-datatables\**" />
+    <EmbeddedResource Remove="Views\OpportunityCriterion\**" />
     <EmbeddedResource Remove="wwwroot\assets\vendor\simple-datatables\**" />
+    <None Remove="Views\OpportunityCriterion\**" />
     <None Remove="wwwroot\assets\vendor\simple-datatables\**" />
   </ItemGroup>
 

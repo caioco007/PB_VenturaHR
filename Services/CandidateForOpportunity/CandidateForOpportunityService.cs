@@ -1,4 +1,5 @@
 ﻿using DTO.CandidateForOpportunity;
+using DTO.ResponseCriterion;
 using DTO.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace Services.CandidateForOpportunity
             this.context = context;
         }
 
-        public async Task<ApplicationDbContext.Models.CandidateForOpportunity> CreateCandidateForOpportunity(int? candidateId, int? opportunityId)
+        public async Task<ApplicationDbContext.Models.CandidateForOpportunity> CreateCandidateForOpportunity(int? candidateId, int? opportunityId, double? notesByOpportunity)
         {
             if (!candidateId.HasValue || !candidateId.HasValue) return null;
 
@@ -27,7 +28,8 @@ namespace Services.CandidateForOpportunity
                 CandidateId = candidateId.Value,
                 OpportunityId = opportunityId.Value,
                 CreatedDate = DateTime.Now,
-                IsDeleted = false
+                IsDeleted = false,
+                NotesByOpportunity = notesByOpportunity
             };
             this.context.CandidateForOpportunity.Add(candidateForOpportunity);
             this.context.SaveChanges();
@@ -59,7 +61,7 @@ namespace Services.CandidateForOpportunity
 
         }
 
-        public async Task<int> GetGountCandidateForOpportunity(int opportunityId) => this.context.CandidateForOpportunity.Where(x => x.OpportunityId == opportunityId).Count();
+        public async Task<int> GetCountCandidateForOpportunity(int opportunityId) => this.context.CandidateForOpportunity.Where(x => x.OpportunityId == opportunityId).Count();
 
         public async Task<List<int>> GetOpportunityIdByCandidateId(int candidateId)
         {
@@ -73,6 +75,28 @@ namespace Services.CandidateForOpportunity
         {
             var candidateForOpportunity = this.context.CandidateForOpportunity.Any(x => x.CandidateId == candidateId && x.OpportunityId == opportunityId && !x.IsDeleted);
             return candidateForOpportunity;
+        }
+    
+        public async Task<float> CalculateNotesByOpportunity(int oppotunityId)
+        {
+            var opportunityCriterion = this.context.OpportunityCriterion.Where(x => x.OpportunityId == oppotunityId);
+
+            List<int> Sum_WeightAndAnswerCriterion = new List<int>();
+
+            foreach (var item in opportunityCriterion)
+            {
+                var answerCriterion = this.context.ResponseCriterion.Where(x => x.OpportunityCriterionId == item.OpportunityCriterionId).Select(c => c.AnswerCriterion);
+                var caclulo = answerCriterion.Single() * item.Weight;
+
+                Sum_WeightAndAnswerCriterion.Add(caclulo);
+            }
+
+            var sum_WeightAndAnswerCriterion = Sum_WeightAndAnswerCriterion.Sum();
+            var reponseCriterion_Sum = opportunityCriterion.Sum(y => y.Weight);
+
+            var divide = Decimal.Divide(sum_WeightAndAnswerCriterion,reponseCriterion_Sum);
+
+            return (float)Decimal.Round(divide, 2); ;
         }
     }
 }

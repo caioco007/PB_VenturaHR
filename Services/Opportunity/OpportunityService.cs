@@ -1,4 +1,6 @@
-﻿using DTO.Opportunity;
+﻿using ApplicationDbContext.Models;
+using DTO.Opportunity;
+using DTO.OpportunityCriterion;
 using DTO.Shared;
 using DTO.Utils;
 using Microsoft.Data.SqlClient;
@@ -60,7 +62,6 @@ namespace Services.Opportunity
         {
             var opportunity = GetDataById(model.OpportunityId.Value);
 
-
             this.dbSet.Update(opportunity);
             this.context.SaveChanges();
         }
@@ -112,5 +113,6 @@ namespace Services.Opportunity
             this.dbSet.Update(entity);
             await this.context.SaveChangesAsync();
         }
+         
     }
 }

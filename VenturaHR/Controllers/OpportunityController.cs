@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services.CandidateForOpportunity;
 using Services.Opportunity;
+using Services.OpportunityCriterion;
 using Services.Person;
+using Services.ResponseCriterion;
 using Services.Shared;
 using System;
 using System.Collections.Generic;
@@ -24,17 +26,21 @@ namespace VenturaHR.Controllers
         readonly PersonTypeService personTypeService;
         readonly OpportunityService opportunityService;
         readonly OpportunityListService opportunityListService;
+        readonly OpportunityCriterionService opportunityCriterionService;
         readonly CandidateForOpportunityService candidateForOpportunityService;
+        readonly ResponseCriterionService responseCriterionService;
         readonly ViewEngineHelper viewEngineHelper;
         private readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public OpportunityController(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, OpportunityListService opportunityListService, CandidateForOpportunityService candidateForOpportunityService, ViewEngineHelper viewEngineHelper, UserManager<AspNetIdentityDbContext.User> userManager)
+        public OpportunityController(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, OpportunityListService opportunityListService, OpportunityCriterionService opportunityCriterionService, CandidateForOpportunityService candidateForOpportunityService, ResponseCriterionService responseCriterionService, ViewEngineHelper viewEngineHelper, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;
             this.opportunityService = opportunityService;
             this.opportunityListService = opportunityListService;
+            this.opportunityCriterionService = opportunityCriterionService;
             this.candidateForOpportunityService = candidateForOpportunityService;
+            this.responseCriterionService = responseCriterionService;
             this.viewEngineHelper = viewEngineHelper;
             this.userManager = userManager;
         }
@@ -61,7 +67,7 @@ namespace VenturaHR.Controllers
                 model.CompanyId = user.PersonId.Value;
                 if (model.OpportunityId.HasValue)
                 {
-                    int countCandidateForOpportunity = await candidateForOpportunityService.GetGountCandidateForOpportunity(model.OpportunityId.Value);
+                    int countCandidateForOpportunity = await candidateForOpportunityService.GetCountCandidateForOpportunity(model.OpportunityId.Value);
 
                     if (countCandidateForOpportunity > 0)
                     {
@@ -70,6 +76,8 @@ namespace VenturaHR.Controllers
                     }
                 }
                 model.OpportunityId = await this.opportunityService.CreateOrUpdateAsync(model);
+
+                await opportunityCriterionService.SaveCriteriaToOpportunity(model.OpportunityId.Value, model.Criteria);
             }
             catch (Exception exception)
             {
@@ -85,6 +93,7 @@ namespace VenturaHR.Controllers
             var personTypeId = (await personTypeService.GetDataByExternalCode("COMPANY")).PersonTypeId;
             ViewBag.PersonTypeId = personTypeId;
             var model = await opportunityService.GetInitialInfo(id, personTypeId);
+            model.Criteria = await opportunityCriterionService.GetOpportunityCriterionByOpportunityId(model.OpportunityId.Value);
 
             return await Task.Run(() => View("Manage", model));
         }
@@ -92,6 +101,8 @@ namespace VenturaHR.Controllers
         public async Task<IActionResult> Detail(int? id)
         {
             var model = await opportunityService.GetViewModelByIdAsync(id.Value);
+
+            model.Criteria = await opportunityCriterionService.GetOpportunityCriterionByOpportunityId(model.OpportunityId.Value);
 
             return await Task.Run(() => View("Detail", model));
         }
@@ -104,9 +115,19 @@ namespace VenturaHR.Controllers
         {
             var user = await userManager.GetUserAsync(User);
 
-            await candidateForOpportunityService.CreateCandidateForOpportunity(user.PersonId, model.OpportunityId.Value);
+            var notesByOpportunity = await SaveResponseCriterion(model.ResponseCriteria, user.PersonId, model.OpportunityId);
+            await candidateForOpportunityService.CreateCandidateForOpportunity(user.PersonId, model.OpportunityId, notesByOpportunity);
 
-            return await Task.Run(() => View("Detail", model));
+
+            return await Task.Run(() => View("Detail", model.OpportunityId));
+        }
+
+        private async Task<float> SaveResponseCriterion(List<DTO.ResponseCriterion.ResponseCriterionViewModel> responseCriteria, int? candidateId, int? opportunityId)
+        {
+            await responseCriterionService.SaveResponseCriteriaToCandidate(responseCriteria, candidateId.Value);
+
+            return await candidateForOpportunityService.CalculateNotesByOpportunity(opportunityId.Value);
+
         }
 
         public virtual async Task<IActionResult> List(DataTablesAjaxPostModel filter, int? personId)
@@ -126,6 +147,10 @@ namespace VenturaHR.Controllers
                     {
                         query = $"OpportunityId IN ({string.Join(",", opportunityIds.Select(x => x.ToString()))}) ";
                         //parameters.AddParameter("OpportunityId", string.Join(",", opportunityIds.Select(x => x.ToString())));
+                    }
+                    else
+                    {
+                        query = $"OpportunityId = 0 ";
                     }
                 }
             }

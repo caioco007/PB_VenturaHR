@@ -1,4 +1,6 @@
 ﻿using DTO.Opportunity;
+using DTO.OpportunityCriterion;
+using DTO.ResponseCriterion;
 using DTO.Utils;
 using System;
 using System.Collections.Generic;
@@ -35,5 +37,21 @@ namespace DTO.Opportunity
         [Update]
         public bool IsDeleted { get; set; }
         public bool IsActive => ExpirationDate > DateTime.Today;
+
+        public List<OpportunityCriterionViewModel> Criteria { get; set; }
+        public List<ResponseCriterionViewModel> ResponseCriteria { get; set; }
+
+        public OpportunityViewModel()
+        {
+            this.Criteria = new List<OpportunityCriterionViewModel>()
+            {
+                new OpportunityCriterionViewModel()
+            };
+            this.ResponseCriteria = new List<ResponseCriterionViewModel>()
+            {
+                new ResponseCriterionViewModel()
+            };
+        }
+
     }
 }

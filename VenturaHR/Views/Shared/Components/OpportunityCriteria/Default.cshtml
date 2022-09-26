@@ -1,0 +1,10 @@
+﻿@model List<DTO.OpportunityCriterion.OpportunityCriterionViewModel>
+
+@foreach (var item in Model)
+{
+    <div class="row">
+        <div class="col-md-11">
+            @(await Component.InvokeAsync<VenturaHR.ViewComponents.OpportunityCriterion.OpportunityCriterionViewComponent>(new { index = Model.IndexOf(item), opportunityCriterionViewModel = item }))
+        </div>
+    </div>
+}

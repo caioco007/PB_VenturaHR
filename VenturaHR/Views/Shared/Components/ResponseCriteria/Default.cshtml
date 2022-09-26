@@ -1,0 +1,10 @@
+﻿@model List<DTO.ResponseCriterion.ResponseCriterionViewModel>
+
+@foreach (var item in Model)
+{
+<div class="row">
+    <div class="col-md-11">
+        @(await Component.InvokeAsync<VenturaHR.ViewComponents.ResponseCriterion.ResponseCriterionViewComponent>(new { index = Model.IndexOf(item), responseCriterionViewModel = item }))
+    </div>
+</div>
+}

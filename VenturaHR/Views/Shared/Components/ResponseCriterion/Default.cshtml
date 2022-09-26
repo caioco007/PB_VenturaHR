@@ -1,0 +1,32 @@
+﻿@model VenturaHR.ViewComponents.ResponseCriterion.ResponseCriterionViewComponent.Wrapper
+
+
+<div data-response-criterion-index="@Model.Index" class="response-criterion">
+    @*<input type="hidden" value="@((Model.Index == 0).ToString())" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), -1, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.Main))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), Model.Index, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.Main))" />*@
+    @*SEMPRE RECRIAMOS O CLAIMANT*@
+    @*<input type="hidden" value="@Model.ClaimantInfo.LeaseGuaranteeRequestClamaintId" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), -1, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.LeaseGuaranteeRequestClamaintId))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), Model.Index, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.LeaseGuaranteeRequestClamaintId))" />*@
+    <div class="row">
+        <input type="hidden" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.OpportunityCriterionId))" value="@Model.ResponseCriterionViewModel.OpportunityCriterionId" />
+        <input type="hidden" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.Weight))" value="@Model.ResponseCriterionViewModel.Weight" />
+        <input type="hidden" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.CandidateId))" value="@Model.ResponseCriterionViewModel.CandidateId" />
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Critério</label>
+                <input class="form-control" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.Criterion))" value="@Model.ResponseCriterionViewModel.Criterion" disabled />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Descrição</label>
+                <input class="form-control" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.Description))" value="@Model.ResponseCriterionViewModel.Description" disabled />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Conhecimento/Experiência</label>
+                <input class="form-control number" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.AnswerCriterion))" />
+            </div>
+        </div>
+    </div>
+</div>
