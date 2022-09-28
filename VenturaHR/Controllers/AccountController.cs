@@ -1,4 +1,5 @@
 ﻿using DTO.Account;
+using DTO.Claim;
 using DTO.Person;
 using DTO.Shared;
 using DTO.User;
@@ -157,6 +158,37 @@ namespace VenturaHR.Controllers
             var userId = await this.userService.CreateOrUpdateAsync(model);
 
             return await Task.Run(() => RedirectToAction("SignIn"));
+        }
+
+        [HttpPost]
+        [ActionName("AdminRegister")]
+        [Authorize(Roles = ClaimHelper.AuthorizationAdministratorRoles)]
+        public async Task<IActionResult> _AdminRegister(UserViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.FirstName))
+                return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha o nome", true)));
+
+            if (!model.Id.HasValue && (string.IsNullOrWhiteSpace(model.Password) || model.Password.Length < 6))
+                return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha uma senha de no mínimo 6 caracteres.", true)));
+
+            if (!string.IsNullOrWhiteSpace(model.Password) && model.Password != model.PasswordConfirmation)
+                return await Task.Run(() => Json(new ReturnResult(null, "Senha e confirmação não coincidem.", true)));
+
+            if (!model.Id.HasValue && await this.userService.EmailExists(model.Email))
+                return await Task.Run(() => Json(new ReturnResult(null, "Este e-mail já está sendo utilizado.", true)));
+
+            if (model.PersonId == (int)DTO.Person.PersonType.Company) model.RoleName = DTO.Person.PersonType.Company.ToString();
+            else if (model.PersonId == (int)DTO.Person.PersonType.Candidate) model.RoleName = DTO.Person.PersonType.Candidate.ToString();
+
+            var personId = CreatePerson(model, 1);
+
+            model.PersonId = personId.Result;
+
+            model.RoleName = await personService.GetRoleName(personId.Result);
+
+            var userId = await this.userService.CreateOrUpdateAsync(model);
+
+            return await Task.Run(() => RedirectToAction("Index", "User"));
         }
 
         private async Task<int> CreatePerson(UserViewModel model, int personType)

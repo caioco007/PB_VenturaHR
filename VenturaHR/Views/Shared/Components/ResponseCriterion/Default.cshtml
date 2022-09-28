@@ -1,5 +1,8 @@
 ﻿@model VenturaHR.ViewComponents.ResponseCriterion.ResponseCriterionViewComponent.Wrapper
-
+@inject Microsoft.AspNetCore.Identity.UserManager<AspNetIdentityDbContext.User> userManager
+@{
+    var user = await userManager.GetUserAsync(User);
+}
 
 <div data-response-criterion-index="@Model.Index" class="response-criterion">
     @*<input type="hidden" value="@((Model.Index == 0).ToString())" data-name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.Criteria), -1, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.Main))" name="@string.Format("{0}[{1}].{2}", nameof(DTO.LeaseGuarantee.Request.LeaseGuaranteeRequestInfo.Claimants), Model.Index, nameof(DTO.LeaseGuarantee.Request.ClaimantInfo.Main))" />*@
@@ -22,11 +25,15 @@
                 <input class="form-control" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.Description))" value="@Model.ResponseCriterionViewModel.Description" disabled />
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label class="control-label">Conhecimento/Experiência</label>
-                <input class="form-control number" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.AnswerCriterion))" />
+        @if (user != null)
+        {
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Conhecimento/Experiência <i class="bi bi-question-circle" title="Preencha de 1 a 5 de acordo com o seu nível de conhecimento. &#013;Sendo : 1 - Nenhum conhecimento e 5 - Muito conhecimneto"></i></label>
+                    <input class="form-control number" name="@string.Format("{0}[{1}].{2}", nameof(DTO.Opportunity.OpportunityViewModel.ResponseCriteria), Model.Index, nameof(DTO.ResponseCriterion.ResponseCriterionViewModel.AnswerCriterion))" />
+                </div>
             </div>
-        </div>
+
+        }
     </div>
 </div>

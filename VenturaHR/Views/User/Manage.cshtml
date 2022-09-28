@@ -1,0 +1,41 @@
+﻿@model int
+
+<form action="@Url.Action("AdminRegister", "Account" )" method="post">
+    <div class="card mb-3">
+
+        <div class="card-body">
+            <h5 class="card-title">Cadastro de Usuário Administrador</h5>
+
+            <div class="row g-3 needs-validation" novalidate>
+                <div class="col-6">
+                    <label for="yourName" class="form-label">Your Name</label>
+                    <input type="text" name="FirstName" class="form-control" id="yourName" required>
+                    <div class="invalid-feedback">Please, enter your name!</div>
+                </div>
+
+                <div class="col-6">
+                    <label for="yourEmail" class="form-label">Your Email</label>
+                    <input type="email" name="Email" class="form-control" id="yourEmail" required>
+                    <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                </div>
+
+                <div class="col-6">
+                    <label for="yourPassword" class="form-label">Password</label>
+                    <input type="password" name="Password" class="form-control" id="yourPassword" required>
+                    <div class="invalid-feedback">Please enter your password!</div>
+                </div>
+
+                <div class="col-6">
+                    <label for="yourPasswordConfirmation" class="form-label">Comfirm Password</label>
+                    <input type="password" name="PasswordConfirmation" class="form-control" id="yourPasswordConfirmation" required>
+                    <div class="invalid-feedback">Please enter your password!</div>
+                </div>
+
+                <div class="col-3">
+                    <button class="btn btn-primary w-100" type="submit">Create Account</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>

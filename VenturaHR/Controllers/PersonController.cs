@@ -34,7 +34,7 @@ namespace VenturaHR.Controllers
                 throw exception;
             }
 
-            return await Task.Run(() => RedirectToAction("Index"));
+            return await Task.Run(() => RedirectToAction("Index", "User"));
         }
 
         public async Task<IActionResult> Manage(int? id)

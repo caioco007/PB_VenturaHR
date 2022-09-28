@@ -34,6 +34,9 @@ namespace VenturaHR.Controllers
         [Authorize(Roles = ClaimHelper.AuthorizationAdministratorRoles)]
         public async Task<IActionResult> Index() => await Task.Run(() => View());
 
+        [Authorize(Roles = ClaimHelper.AuthorizationAdministratorRoles)]
+        public async Task<IActionResult> Manage() => await Task.Run(() => View());
+
         public virtual async Task<IActionResult> List(DataTablesAjaxPostModel filter)
         {
             var parameters = new SqlParameterList();
