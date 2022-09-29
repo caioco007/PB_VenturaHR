@@ -29,8 +29,8 @@ namespace VenturaHRTest
             var model = new DTO.Opportunity.OpportunityViewModel()
             {
                 StatusId = 1,
-                Office = "caio@gmail.com",
-                Description = "123456",
+                Office = "Analista Senior",
+                Description = "2 anos de experiência",
                 EmploymentId = 2,
                 Salary = 3000.00,
                 ExpirationDate = DateTime.Now,
