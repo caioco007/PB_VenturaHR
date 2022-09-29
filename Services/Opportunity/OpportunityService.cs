@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Services.Opportunity
 {
-    public class OpportunityService : Shared.RepositoryService<ApplicationDbContext.Models.Opportunity, OpportunityViewModel, int>
+    public class OpportunityService : Shared.RepositoryService<ApplicationDbContext.Models.Opportunity, OpportunityViewModel, int>, IOpportunityService
     {
         public OpportunityService(ApplicationDbContext.Context.ApplicationDbContext context) : base(context, "OpportunityId")
         {

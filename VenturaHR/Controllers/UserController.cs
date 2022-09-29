@@ -20,10 +20,10 @@ namespace VenturaHR.Controllers
     {
         readonly UserListService userListService;
         readonly UserService userService;
-        readonly PersonService personService;
+        readonly IPersonService personService;
         private readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public UserController(UserListService userListService, UserService userService, PersonService personService, UserManager<AspNetIdentityDbContext.User> userManager)
+        public UserController(UserListService userListService, UserService userService, IPersonService personService, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.userListService = userListService;
             this.userService = userService;

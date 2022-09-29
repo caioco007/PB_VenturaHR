@@ -22,9 +22,9 @@ namespace VenturaHR.Controllers
 {
     public class OpportunityController : Controller
     {
-        readonly PersonService personService;
+        readonly IPersonService personService;
         readonly PersonTypeService personTypeService;
-        readonly OpportunityService opportunityService;
+        readonly IOpportunityService opportunityService;
         readonly OpportunityListService opportunityListService;
         readonly OpportunityCriterionService opportunityCriterionService;
         readonly CandidateForOpportunityService candidateForOpportunityService;
@@ -32,7 +32,7 @@ namespace VenturaHR.Controllers
         readonly ViewEngineHelper viewEngineHelper;
         private readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public OpportunityController(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, OpportunityListService opportunityListService, OpportunityCriterionService opportunityCriterionService, CandidateForOpportunityService candidateForOpportunityService, ResponseCriterionService responseCriterionService, ViewEngineHelper viewEngineHelper, UserManager<AspNetIdentityDbContext.User> userManager)
+        public OpportunityController(IPersonService personService, PersonTypeService personTypeService, IOpportunityService opportunityService, OpportunityListService opportunityListService, OpportunityCriterionService opportunityCriterionService, CandidateForOpportunityService candidateForOpportunityService, ResponseCriterionService responseCriterionService, ViewEngineHelper viewEngineHelper, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;

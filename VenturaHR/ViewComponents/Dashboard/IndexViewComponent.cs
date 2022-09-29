@@ -14,13 +14,13 @@ namespace VenturaHR.ViewComponents.Dashboard
     [ViewComponent(Name = "Dashboard")]
     public class IndexViewComponent : ViewComponent
     {
-        readonly PersonService personService;
+        readonly IPersonService personService;
         readonly PersonTypeService personTypeService;
         readonly OpportunityService opportunityService;
         readonly CandidateForOpportunityService candidateForOpportunityService;
         readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public IndexViewComponent(PersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, CandidateForOpportunityService candidateForOpportunityService, UserManager<AspNetIdentityDbContext.User> userManager)
+        public IndexViewComponent(IPersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, CandidateForOpportunityService candidateForOpportunityService, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;

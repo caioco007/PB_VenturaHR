@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Services.Opportunity;
 using System;
 using System.Threading.Tasks;
 using VenturaHR.Controllers;
@@ -13,33 +14,34 @@ namespace VenturaHRTest
 {
     public class UnitTest1
     {
-        private AccountController _accountController;
-        private readonly Mock<HttpContext> _contextMock;
+        //private AccountController _accountController;
+        //private readonly Mock<HttpContext> _contextMock;
 
-        public UnitTest1()
-        {
-            _contextMock = new Mock<HttpContext>();
-        }
+        //public UnitTest1()
+        //{
+        //    _contextMock = new Mock<HttpContext>();
+        //}
 
-        [Fact(DisplayName = "Validate Login Success")]
-        public async Task AccountController_SignIn_Sucess()
+        [Fact(DisplayName = "Create Opportuniry Success")]
+        public async Task Create_Opportunity_Sucess()
         {
-            var model = new SignInViewModel()
+            var opportunity = new Mock<IOpportunityService>();
+            var model = new DTO.Opportunity.OpportunityViewModel()
             {
-                Email = "caio@gmail.com",
-                Password = "123456",
-                RememberMe = false
+                StatusId = 1,
+                Office = "caio@gmail.com",
+                Description = "123456",
+                EmploymentId = 2,
+                Salary = 3000.00,
+                ExpirationDate = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                CompanyId = 3,
+                IsDeleted = false,
             };
-            //model.Email = "caiocandidate@gmail.com";
-            //model.Password = "123456";
-            //model.RememberMe = false;
-            
 
-            _accountController.ControllerContext.HttpContext = _contextMock.Object;
-            var signInResult = await _accountController._SignIn(model,null,2);
-            var viewResult = Assert.IsType<OkObjectResult>(signInResult);
+            opportunity.Object.Create(model);
 
-            Assert.IsAssignableFrom<SignInViewModel>(viewResult.Value);
+            opportunity.Verify(r => r.Create(model), Times.Once);
         }
     }
 }

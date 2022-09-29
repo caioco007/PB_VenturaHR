@@ -20,11 +20,11 @@ namespace VenturaHR.Controllers
         readonly SignInManager<AspNetIdentityDbContext.User> signInManager;
         readonly UserManager<AspNetIdentityDbContext.User> userManager;
         readonly UserService userService;
-        readonly PersonService personService;
+        readonly IPersonService personService;
 
         readonly ViewEngineHelper viewEngineHelper;
 
-        public AccountController(SignInManager<AspNetIdentityDbContext.User> signInManager, UserManager<AspNetIdentityDbContext.User> userManager, ViewEngineHelper viewEngineHelper, UserService userService, PersonService personService)
+        public AccountController(SignInManager<AspNetIdentityDbContext.User> signInManager, UserManager<AspNetIdentityDbContext.User> userManager, ViewEngineHelper viewEngineHelper, UserService userService, IPersonService personService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;

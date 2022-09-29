@@ -63,10 +63,10 @@ namespace VenturaHR
             services.AddScoped<Services.User.UserService>();
             services.AddScoped<Services.User.UserListService>();
 
-            services.AddScoped<Services.Person.PersonService>();
+            services.AddScoped<Services.Person.IPersonService,Services.Person.PersonService>();
             services.AddScoped<Services.Person.PersonTypeService>();
 
-            services.AddScoped<Services.Opportunity.OpportunityService>();
+            services.AddScoped<Services.Opportunity.IOpportunityService, Services.Opportunity.OpportunityService>();
             services.AddScoped<Services.Opportunity.OpportunityListService>();
 
             services.AddScoped <Services.CandidateForOpportunity.CandidateForOpportunityService>();

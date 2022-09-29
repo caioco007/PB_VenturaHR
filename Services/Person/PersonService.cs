@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Services.Person
 {
-    public class PersonService : Shared.RepositoryService<ApplicationDbContext.Models.Person, PersonViewModel, int>
+    public class PersonService : Shared.RepositoryService<ApplicationDbContext.Models.Person, PersonViewModel, int>, IPersonService
     {
         public PersonService(ApplicationDbContext.Context.ApplicationDbContext context) : base(context, "PersonId")
         {

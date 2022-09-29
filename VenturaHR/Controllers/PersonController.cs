@@ -10,11 +10,11 @@ namespace VenturaHR.Controllers
 {
     public class PersonController : Controller
     {
-        readonly PersonService personService;
+        readonly IPersonService personService;
         readonly PersonTypeService personTypeService;
         private readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public PersonController(PersonService personService, PersonTypeService personTypeService, UserManager<AspNetIdentityDbContext.User> userManager)
+        public PersonController(IPersonService personService, PersonTypeService personTypeService, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;

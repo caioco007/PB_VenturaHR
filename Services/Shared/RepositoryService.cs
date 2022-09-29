@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Services.Shared
 {
-    public abstract class RepositoryService<TEntity, TModel, Key>
+    public abstract class RepositoryService<TEntity, TModel, Key> : IRepositoryService<TEntity, TModel, Key>
         where TEntity : class
         where TModel : class
     {
@@ -43,6 +43,10 @@ namespace Services.Shared
             else query += id;
 
             return await dbSet.FromSqlRaw(query).SingleOrDefaultAsync();
+        }
+        public IQueryable<TEntity> GetData()
+        {
+            return (from l in this.dbSet select l);
         }
         public List<TEntity> GetData(Expression<Func<TEntity, bool>> expr = null)
         {
@@ -90,7 +94,7 @@ namespace Services.Shared
             List<TEntity> entities;
 
             if (expr != null) entities = GetData(expr);
-            else entities = GetData();
+            else entities = GetData().ToList();
 
             return ToViewModel(entities);
         }
