@@ -103,7 +103,7 @@
             columns: [
                 {
                     render: function (data, type, row) {
-                        if (row.companyId == @personId && row.statusName != '@DTO.Opportunity.StatusTypes.Finalizada') {
+                        if (row.companyId == @personId) {
                             return `<a href="@Url.Action("CompanyManage", "Opportunity")/?id=${row.opportunityId}" >#${row.opportunityId}</a>`;
                         }
                         else {

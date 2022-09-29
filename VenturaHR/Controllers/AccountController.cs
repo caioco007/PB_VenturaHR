@@ -125,9 +125,9 @@ namespace VenturaHR.Controllers
         #region [Register]
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Register(int? personType)
+        public async Task<IActionResult> Register()
         {
-            return await Task.Run(() => View(personType));
+            return await Task.Run(() => View(null));
         }
         [AllowAnonymous]
         [HttpPost]
@@ -135,16 +135,27 @@ namespace VenturaHR.Controllers
         public async Task<IActionResult> _Register(UserViewModel model, string returnUrl = null, int? personType = null)
         {
             if (string.IsNullOrWhiteSpace(model.FirstName))
-                return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha o nome", true)));
-
+            {
+                ViewData["ErrorMessage"] = "Por favor, preencha o nome";
+                return await Task.Run(() => View(model));
+            }
             if (!model.Id.HasValue && (string.IsNullOrWhiteSpace(model.Password) || model.Password.Length < 6))
-                return await Task.Run(() => Json(new ReturnResult(null, "Por favor, preencha uma senha de no mínimo 6 caracteres.", true)));
+            {
+                ViewData["ErrorMessage"] = "Por favor, preencha uma senha de no mínimo 6 caracteres";
+                return await Task.Run(() => View(model));
+            }
 
             if (!string.IsNullOrWhiteSpace(model.Password) && model.Password != model.PasswordConfirmation)
-                return await Task.Run(() => Json(new ReturnResult(null, "Senha e confirmação não coincidem.", true)));
+            {
+                ViewData["ErrorMessage"] = "Senha e confirmação não coincidem.";
+                return await Task.Run(() => View(model));
+            }
 
             if (!model.Id.HasValue && await this.userService.EmailExists(model.Email))
-                return await Task.Run(() => Json(new ReturnResult(null, "Este e-mail já está sendo utilizado.", true)));
+            {
+                ViewData["ErrorMessage"] = "Este e-mail já está sendo utilizado.";
+                return await Task.Run(() => View(model));
+            }
 
             if (model.PersonId == (int)DTO.Person.PersonType.Company) model.RoleName = DTO.Person.PersonType.Company.ToString();
             else if (model.PersonId == (int)DTO.Person.PersonType.Candidate) model.RoleName = DTO.Person.PersonType.Candidate.ToString();

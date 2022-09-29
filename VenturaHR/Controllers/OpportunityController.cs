@@ -93,7 +93,8 @@ namespace VenturaHR.Controllers
             var personTypeId = (await personTypeService.GetDataByExternalCode("COMPANY")).PersonTypeId;
             ViewBag.PersonTypeId = personTypeId;
             var model = await opportunityService.GetInitialInfo(id, personTypeId);
-            model.Criteria = await opportunityCriterionService.GetOpportunityCriterionByOpportunityId(model.OpportunityId.Value);
+            if(model.OpportunityId.HasValue)
+                model.Criteria = await opportunityCriterionService.GetOpportunityCriterionByOpportunityId(model.OpportunityId.Value);
 
             return await Task.Run(() => View("Manage", model));
         }
