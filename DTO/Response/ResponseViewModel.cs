@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ApplicationDbContext.Models
+namespace DTO.Response
 {
-    public partial class CandidateForOpportunity
+    public partial class ResponseViewModel
     {
-        public int CandidateForOpportunityId { get; set; }
+        public int ResponseId { get; set; }
         public int OpportunityId { get; set; }
         public DateTime CreatedDate { get; set; }
         public int? CandidateId { get; set; }
         public bool IsDeleted { get; set; }
-        public double? NotesByOpportunity { get; set; }        
+        public double? NotesByOpportunity { get; set; }
     }
 }

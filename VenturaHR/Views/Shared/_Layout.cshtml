@@ -1,7 +1,7 @@
 ﻿@using VenturaHR.Models;
 
 @inject Microsoft.AspNetCore.Identity.UserManager<AspNetIdentityDbContext.User> userManager
-@inject Services.Person.PersonService personService
+@inject Services.Interface.IPersonService personService
 @{
     var user = await userManager.GetUserAsync(User);
     var person = user != null ? personService.GetDataById(user.PersonId.Value) : null;

@@ -1,7 +1,7 @@
 ﻿@model DTO.Opportunity.OpportunityViewModel
 
 @inject Services.Person.PersonTypeService personTypeService
-@inject Services.CandidateForOpportunity.CandidateForOpportunityService candidateForOpportunityService
+@inject Services.Response.ResponseService responseService
 @inject Services.Person.PersonService personService
 @inject VenturaHR.Helpers.DropDownListHelper dropDownListHelper
 
@@ -12,7 +12,7 @@
 
     var personTypeId = user == null ? 0 : personService.GetPersonTypeIdByPersonId(user.PersonId.Value);
 
-    bool isCandidateForOpportunity = user == null ? false : await candidateForOpportunityService.ExistCandidateForOpportunity(user.PersonId.Value, Model.OpportunityId.Value);
+    bool isCandidateForOpportunity = user == null ? false : await responseService.ExistCandidateForOpportunity(user.PersonId.Value, Model.OpportunityId.Value);
 }
 <div class="card mt-3">
     <div class="card-body">

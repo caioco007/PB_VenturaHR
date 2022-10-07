@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DTO.CandidateForOpportunity
+namespace DTO.Response
 {
-    public partial class CandidateForOpportunityProcedureViewModel
+    public partial class ResponseProcedureViewModel
     {
         public int CandidateId { get; set; }
         public string FullName { get; set; }

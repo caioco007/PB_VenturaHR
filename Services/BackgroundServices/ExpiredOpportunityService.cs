@@ -28,8 +28,8 @@ namespace Services.BackgroundServices
             {
                 using (var scope = serviceProvider.CreateScope())
                 {
-                    var opportunityService = scope.ServiceProvider.GetRequiredService<Services.Opportunity.IOpportunityService>();
-                    var personService = scope.ServiceProvider.GetRequiredService<Services.Person.IPersonService>();
+                    var opportunityService = scope.ServiceProvider.GetRequiredService<Services.Interface.IOpportunityService>();
+                    var personService = scope.ServiceProvider.GetRequiredService<Services.Interface.IPersonService>();
                     var mailService = scope.ServiceProvider.GetRequiredService<Mail.MailService>();
 
                     foreach (var opportunityAtual in await opportunityService.ObterOpportunityExpired())

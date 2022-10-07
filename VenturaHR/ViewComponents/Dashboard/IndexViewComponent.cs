@@ -1,11 +1,11 @@
 ﻿using DTO.Claim;
 using DTO.Dashboard;
-using DTO.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Services.CandidateForOpportunity;
+using Services.Interface;
 using Services.Opportunity;
 using Services.Person;
+using Services.Response;
 using System;
 using System.Threading.Tasks;
 
@@ -17,15 +17,15 @@ namespace VenturaHR.ViewComponents.Dashboard
         readonly IPersonService personService;
         readonly PersonTypeService personTypeService;
         readonly OpportunityService opportunityService;
-        readonly CandidateForOpportunityService candidateForOpportunityService;
+        readonly ResponseService responseService;
         readonly UserManager<AspNetIdentityDbContext.User> userManager;
 
-        public IndexViewComponent(IPersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, CandidateForOpportunityService candidateForOpportunityService, UserManager<AspNetIdentityDbContext.User> userManager)
+        public IndexViewComponent(IPersonService personService, PersonTypeService personTypeService, OpportunityService opportunityService, ResponseService responseService, UserManager<AspNetIdentityDbContext.User> userManager)
         {
             this.personService = personService;
             this.personTypeService = personTypeService;
             this.opportunityService = opportunityService;
-            this.candidateForOpportunityService = candidateForOpportunityService;
+            this.responseService = responseService;
             this.userManager = userManager;
         }
 
@@ -50,8 +50,8 @@ namespace VenturaHR.ViewComponents.Dashboard
                 dashboardViewModel.TotalCandidatesToday = await personService.CountAsync(x => x.PersonTypeId == personCandidateTypeId && !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date);
                 dashboardViewModel.TotalActiveCandidates = await personService.CountAsync(x => x.PersonTypeId == personCandidateTypeId && !x.IsDeleted && x.IsActive);
 
-                dashboardViewModel.TotalCandidateForOpportunitys = await candidateForOpportunityService.CountAsync(x => !x.IsDeleted);
-                dashboardViewModel.TotalCandidateForOpportunitysToday = await candidateForOpportunityService.CountAsync(x => !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date);
+                dashboardViewModel.TotalCandidateForOpportunitys = await responseService.CountAsync(x => !x.IsDeleted);
+                dashboardViewModel.TotalCandidateForOpportunitysToday = await responseService.CountAsync(x => !x.IsDeleted && x.CreatedDate.Date == DateTime.Now.Date);
             }
             //else if (HttpContext.User.IsCompany())
             //{
@@ -64,7 +64,7 @@ namespace VenturaHR.ViewComponents.Dashboard
             //else if (HttpContext.User.IsCandidate())
             //{
             //    var user = await userManager.GetUserAsync(HttpContext.User);
-            //    var opportunityIds = await candidateForOpportunityService.GetOpportunityIdByCandidateId(user.PersonId.Value);
+            //    var opportunityIds = await responseService.GetOpportunityIdByCandidateId(user.PersonId.Value);
 
             //    dashboardViewModel.TotalOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && opportunityIds.Contains(x.OpportunityId));
             //    dashboardViewModel.TotalActiveOpportunitys = await opportunityService.CountAsync(x => !x.IsDeleted && x.ExpirationDate > DateTime.Today && opportunityIds.Contains(x.OpportunityId));

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Shared
+namespace Services.Interface
 {
     public interface IRepositoryService<TEntity, TModel, Key>
         where TEntity : class

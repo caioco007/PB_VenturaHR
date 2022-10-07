@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Opportunity
+namespace Services.Interface
 {
-    public interface IOpportunityService : Shared.IRepositoryService<ApplicationDbContext.Models.Opportunity, OpportunityViewModel, int>
+    public interface IOpportunityService : IRepositoryService<ApplicationDbContext.Models.Opportunity, OpportunityViewModel, int>
     {
         Task<OpportunityViewModel> GetInitialInfo(int? id, int companyTypeId);
         Task<List<int>> ObterOpportunityExpired();

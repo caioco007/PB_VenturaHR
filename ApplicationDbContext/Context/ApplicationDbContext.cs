@@ -20,7 +20,7 @@ namespace ApplicationDbContext.Context
         public DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public DbSet<CandidateForOpportunity> CandidateForOpportunity { get; set; }
+        public DbSet<Response> Response { get; set; }
         public DbSet<Opportunity> Opportunity { get; set; }
         public DbSet<OpportunityCriterion> OpportunityCriterion { get; set; }
         public DbSet<OpportunityList> OpportunityList { get; set; }

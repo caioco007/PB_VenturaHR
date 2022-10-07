@@ -1,14 +1,9 @@
-﻿using ApplicationDbContext.Models;
-using DTO.Opportunity;
-using DTO.OpportunityCriterion;
-using DTO.Shared;
-using DTO.Utils;
-using Microsoft.Data.SqlClient;
+﻿using DTO.Opportunity;
 using Microsoft.EntityFrameworkCore;
+using Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Services.Opportunity

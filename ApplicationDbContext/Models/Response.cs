@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
-namespace DTO.CandidateForOpportunity
+namespace ApplicationDbContext.Models
 {
-    public partial class CandidateForOpportunityViewModel
+    public class Response
     {
-        public int CandidateForOpportunityId { get; set; }
+        public int ResponseId { get; set; }
         public int OpportunityId { get; set; }
         public DateTime CreatedDate { get; set; }
         public int? CandidateId { get; set; }

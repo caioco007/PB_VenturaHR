@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Services.Interface;
 using Services.Opportunity;
 using System;
 using System.Threading.Tasks;

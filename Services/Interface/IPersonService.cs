@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Person
+namespace Services.Interface
 {
-    public interface IPersonService : Shared.IRepositoryService<ApplicationDbContext.Models.Person, PersonViewModel, int>
+    public interface IPersonService : IRepositoryService<ApplicationDbContext.Models.Person, PersonViewModel, int>
     {
         ReturnResult ValidateNewPerson(PersonViewModel model);
         Task<ReturnResult> ValidateNewPersonAsync(PersonViewModel model);

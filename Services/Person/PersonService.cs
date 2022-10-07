@@ -1,10 +1,9 @@
 ﻿using DTO.Person;
 using DTO.Shared;
-using DTO.User;
 using DTO.Utils;
 using Microsoft.EntityFrameworkCore;
+using Services.Interface;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 

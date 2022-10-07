@@ -1,29 +1,27 @@
-﻿using DTO.CandidateForOpportunity;
-using DTO.ResponseCriterion;
+﻿using DTO.Response;
 using DTO.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.CandidateForOpportunity
+namespace Services.Response
 {
-    public class CandidateForOpportunityService : Shared.RepositoryService<ApplicationDbContext.Models.CandidateForOpportunity, CandidateForOpportunityViewModel, int>
+    public class ResponseService : Shared.RepositoryService<ApplicationDbContext.Models.Response, ResponseViewModel, int>
     {
         readonly ApplicationDbContext.Context.ApplicationDbContext context;
-        public CandidateForOpportunityService(ApplicationDbContext.Context.ApplicationDbContext context) : base(context, "CandidateForOpportunityId")
+        public ResponseService(ApplicationDbContext.Context.ApplicationDbContext context) : base(context, "Id")
         {
             this.context = context;
         }
 
-        public async Task<ApplicationDbContext.Models.CandidateForOpportunity> CreateCandidateForOpportunity(int? candidateId, int? opportunityId, double? notesByOpportunity)
+        public async Task<ApplicationDbContext.Models.Response> CreateCandidateForOpportunity(int? candidateId, int? opportunityId, double? notesByOpportunity)
         {
             if (!candidateId.HasValue || !candidateId.HasValue) return null;
 
-            var candidateForOpportunity = new ApplicationDbContext.Models.CandidateForOpportunity
+            var candidateForOpportunity = new ApplicationDbContext.Models.Response
             {
                 CandidateId = candidateId.Value,
                 OpportunityId = opportunityId.Value,
@@ -31,49 +29,49 @@ namespace Services.CandidateForOpportunity
                 IsDeleted = false,
                 NotesByOpportunity = notesByOpportunity
             };
-            this.context.CandidateForOpportunity.Add(candidateForOpportunity);
+            this.context.Response.Add(candidateForOpportunity);
             this.context.SaveChanges();
 
             return candidateForOpportunity;
         }
 
-        public async Task<List<DTO.CandidateForOpportunity.CandidateForOpportunityProcedureViewModel>> GetCandidateForOpportunity(int opportunityId)
+        public async Task<List<DTO.Response.ResponseProcedureViewModel>> GetCandidateForOpportunity(int opportunityId)
         {
 
             using (var command = context.Database.GetDbConnection().CreateCommand())
             {
 
-                command.CommandText = "pr_GetCandidateForOpportunity @OpportunityId = @_OpportunityId";
+                command.CommandText = "pr_GetResponse @OpportunityId = @_OpportunityId";
 
                 command.Parameters.Add(new SqlParameter("@_OpportunityId", opportunityId));
 
                 await context.Database.OpenConnectionAsync();
 
-                var models = new List<DTO.CandidateForOpportunity.CandidateForOpportunityProcedureViewModel>();
+                var models = new List<DTO.Response.ResponseProcedureViewModel>();
 
                 using (var result = await command.ExecuteReaderAsync())
                 {
                     while (await result.ReadAsync())
-                        models.Add(result.CopyToEntity<DTO.CandidateForOpportunity.CandidateForOpportunityProcedureViewModel>());
+                        models.Add(result.CopyToEntity<DTO.Response.ResponseProcedureViewModel>());
                 }
                 return models;
             }
 
         }
 
-        public async Task<int> GetCountCandidateForOpportunity(int opportunityId) => this.context.CandidateForOpportunity.Where(x => x.OpportunityId == opportunityId).Count();
+        public async Task<int> GetCountCandidateForOpportunity(int opportunityId) => this.context.Response.Where(x => x.OpportunityId == opportunityId).Count();
 
         public async Task<List<int>> GetOpportunityIdByCandidateId(int candidateId)
         {
             List<int> opportunityIds = new List<int>();
-            var candidateForOpportunity = this.context.CandidateForOpportunity.Where(x => x.CandidateId == candidateId && !x.IsDeleted).ToList();
+            var candidateForOpportunity = this.context.Response.Where(x => x.CandidateId == candidateId && !x.IsDeleted).ToList();
             if (candidateForOpportunity.Count > 0) opportunityIds.AddRange(candidateForOpportunity.Select(x => x.OpportunityId));
             return opportunityIds;
         }
         
         public async Task<bool> ExistCandidateForOpportunity(int candidateId, int opportunityId)
         {
-            var candidateForOpportunity = this.context.CandidateForOpportunity.Any(x => x.CandidateId == candidateId && x.OpportunityId == opportunityId && !x.IsDeleted);
+            var candidateForOpportunity = this.context.Response.Any(x => x.CandidateId == candidateId && x.OpportunityId == opportunityId && !x.IsDeleted);
             return candidateForOpportunity;
         }
     
